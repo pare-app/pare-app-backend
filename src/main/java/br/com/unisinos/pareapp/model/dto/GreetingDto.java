@@ -1,4 +1,4 @@
-package br.com.unisinos.pareapp;
+package br.com.unisinos.pareapp.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,16 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Greeting {
-
+public class GreetingDto extends BaseDto {
 	private long id;
 	private String content;
-
-	@Override
-	public String toString() {
-		return "Greeting{" +
-				"id='" + id + '\'' +
-				", content=" + content +
-				'}';
-	}
 }
