@@ -1,20 +1,25 @@
 package br.com.unisinos.pareapp.security.config;
 
-import br.com.unisinos.pareapp.security.TokenAuthenticationFilter;
-import br.com.unisinos.pareapp.security.TokenAuthenticationProvider;
-import br.com.unisinos.pareapp.security.service.impl.NoRedirectStrategy;
+import br.com.unisinos.pareapp.security.JwtTokenFilter;
+import br.com.unisinos.pareapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,46 +28,50 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/"),
-            new AntPathRequestMatcher("/public/**"),
-            new AntPathRequestMatcher("/v3/api-docs/**"),
-            new AntPathRequestMatcher("/swagger-ui/**"),
-            new AntPathRequestMatcher("/swagger-ui.html")
-    );
-    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
-
-
-    private final TokenAuthenticationProvider provider;
+    private final JwtTokenFilter jwtTokenFilter;
+    private final AuthenticationProvider authenticationProvider;
+    @Value("${app.security.publicUrls}")
+    private final List<String> publicUrls = Collections.singletonList("/public/**");
 
     @Override
-    public void configure(final WebSecurity web) {
-        web.ignoring().requestMatchers(PUBLIC_URLS);
+    public void configure(WebSecurity web) {
+        web.ignoring().requestMatchers(getPublicUrlsMatcher());
     }
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS)
                 .and()
                 .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(forbiddenEntryPoint(), PROTECTED_URLS)
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            log.error("Unauthorized request - {}", ex.getMessage());
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                        }
+                )
                 .and()
-                .authenticationProvider(provider)
-                .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtTokenFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests()
-                .requestMatchers(PROTECTED_URLS)
+                .requestMatchers(getProtectedUrlsMatcher())
                 .authenticated()
                 .and()
                 .csrf().disable()
@@ -71,24 +80,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().disable();
     }
 
-    @Bean
-    AuthenticationEntryPoint forbiddenEntryPoint() {
-        return new HttpStatusEntryPoint(HttpStatus.FORBIDDEN);
+    private RequestMatcher getPublicUrlsMatcher(){
+        return new OrRequestMatcher(publicUrls.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList()));
+    }
+
+    private RequestMatcher getProtectedUrlsMatcher(){
+        return new NegatedRequestMatcher(getPublicUrlsMatcher());
     }
 
     @Bean
-    SimpleUrlAuthenticationSuccessHandler successHandler() {
-        final SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
-        successHandler.setRedirectStrategy(new NoRedirectStrategy());
-        return successHandler;
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
-
-    @Bean
-    TokenAuthenticationFilter restAuthenticationFilter() throws Exception {
-        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
-        filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(successHandler());
-        return filter;
-    }
-
 }

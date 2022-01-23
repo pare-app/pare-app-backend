@@ -1,40 +1,52 @@
 package br.com.unisinos.pareapp.service.impl;
 
+import br.com.unisinos.pareapp.dao.UserDao;
 import br.com.unisinos.pareapp.model.entity.User;
+import br.com.unisinos.pareapp.security.service.impl.JwtTokenService;
 import br.com.unisinos.pareapp.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
-
 @Service
+@RequiredArgsConstructor
 public class DefaultUserService implements UserService {
-
-    Map<String, User> users = new HashMap<String, User>()
-    {{
-        put("Matt", new User("0","matt","idg"));
-    }};
+    private final UserDao userDao;
+    private final JwtTokenService jwtTokenService;
 
     @Override
-    public User save(final User user) {
-        return users.put(user.getId(), user);
+    public void save(final User user) {
+        userDao.save(user);
     }
 
     @Override
     public Optional<User> find(final String id) {
-        return ofNullable(users.get(id));
+        return userDao.find(id);
     }
 
     @Override
     public Optional<User> findByUsername(final String username) {
-        return users
-                .values()
-                .stream()
-                .filter(u -> Objects.equals(username, u.getUsername()))
-                .findFirst();
+        return userDao.findByUsername(username);
     }
+
+    @Override
+    public Optional<User> findByToken(String token) {
+        return Optional
+                .of(jwtTokenService.verify(token))
+                .map(map -> map.get("username"))
+                .flatMap(this::findByUsername);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return findByUsername(username).orElse(null);
+    }
+
+
 }

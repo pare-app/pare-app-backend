@@ -1,37 +1,38 @@
 package br.com.unisinos.pareapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Builder
-public class User implements UserDetails {
-    private static final long serialVersionUID = 2396654715019746670L;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "app_user")
+public class User extends BaseEntity implements UserDetails {
 
-    private String id;
+    @NotEmpty(message = "empty name")
+    private String name;
+    @Email(message = "not an email pattern")
+    @NotEmpty(message = "empty email")
     private String username;
+    @NotEmpty(message = "empty password")
     private String password;
-
-    public User(String id, String username, String password){
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
 
     @JsonIgnore
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         return new ArrayList<>();
-    }
-
-    @JsonIgnore
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @JsonIgnore
@@ -55,15 +56,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    public String getId(){
-        return id;
     }
 
 }

@@ -4,8 +4,7 @@ import br.com.unisinos.pareapp.model.entity.User;
 
 import java.util.Optional;
 
-public interface UserAuthenticationService {
+public interface AuthenticationService {
     Optional<String> login(String username, String password);
-    Optional<User> findByToken(String token);
     void logout(User user);
 }
