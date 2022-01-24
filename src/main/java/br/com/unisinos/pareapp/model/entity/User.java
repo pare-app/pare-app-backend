@@ -23,6 +23,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @NotEmpty(message = "empty name")
     private String name;
+    @Column(unique = true)
     @Email(message = "not an email pattern")
     @NotEmpty(message = "empty email")
     private String username;

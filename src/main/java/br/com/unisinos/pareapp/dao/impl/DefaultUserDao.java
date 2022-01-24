@@ -23,6 +23,12 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
         return findBy(parameters);
     }
 
-
-
+    @Override
+    public Optional<User> find(User user) {
+        if(user.getId() != null) return find(user.getId());
+        Map<String,String> parameters = new HashMap<>();
+        if(user.getUsername() != null) parameters.put("username", user.getUsername());
+        if(user.getName() != null) parameters.put("name", user.getName());
+        return findBy(parameters);
+    }
 }

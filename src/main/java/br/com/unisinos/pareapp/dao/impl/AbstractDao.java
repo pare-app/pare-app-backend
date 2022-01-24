@@ -1,6 +1,7 @@
 package br.com.unisinos.pareapp.dao.impl;
 
 import br.com.unisinos.pareapp.dao.BaseDao;
+import br.com.unisinos.pareapp.model.dto.BaseDto;
 import br.com.unisinos.pareapp.model.entity.BaseEntity;
 import br.com.unisinos.pareapp.model.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
     protected final Class<T> type;
 
     @Override
-    public Optional<T> find(final String id) {
+    public Optional<T> find(final Integer id) {
         EntityManager entityManager = begingTransaction();
         T result = entityManager.find(type, id);
         closeTransaction(entityManager);

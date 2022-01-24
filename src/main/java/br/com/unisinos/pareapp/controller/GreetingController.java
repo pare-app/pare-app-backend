@@ -41,7 +41,7 @@ public class GreetingController {
 	})
 	@GetMapping("")
 	public ResponseEntity<GreetingDto> greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		GreetingDto greetingDto = new GreetingDto(counter.incrementAndGet(), String.format(template, name));
+		GreetingDto greetingDto = new GreetingDto(new Long(counter.incrementAndGet()).intValue(), String.format(template, name));
 		greetingDtos.add(greetingDto);
 		log.info(getGreetings());
 		ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();

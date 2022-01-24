@@ -1,15 +1,16 @@
-package br.com.unisinos.pareapp.model.dto;
+package br.com.unisinos.pareapp.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class LoginDto extends BaseDto{
+@AllArgsConstructor
+@NoArgsConstructor
+public class RegisterDto {
+    private String name;
     private String username;
     private String password;
 }

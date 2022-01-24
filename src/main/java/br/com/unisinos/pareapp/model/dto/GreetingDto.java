@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class GreetingDto extends BaseDto {
-	private long id;
 	private String content;
+
+	public GreetingDto(Integer id, String content) {
+		super(id);
+		this.content = content;
+	}
 }
