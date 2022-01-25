@@ -13,8 +13,8 @@ public abstract class AbstractEntityService<T extends BaseEntity> implements Ent
     private final BaseDao<T> dao;
 
     @Override
-    public void save(T entity) {
-        dao.save(entity);
+    public T save(T entity) {
+        return dao.save(entity);
     }
 
     @Override

@@ -35,10 +35,11 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
     }
 
     @Override
-    public void save(T entity) {
+    public T save(T entity) {
         EntityManager entityManager = begingTransaction();
         entityManager.persist(entity);
         closeTransaction(entityManager);
+        return entity;
     }
 
     protected Optional<T> findBy(Map<String, String> parameters) {
