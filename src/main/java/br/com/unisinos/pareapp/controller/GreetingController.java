@@ -59,8 +59,7 @@ public class GreetingController {
 							schema = @Schema(implementation = GreetingDto.class)) })
 	})
 	@PostMapping("")
-	public ResponseEntity<GreetingDto> greeting(@RequestParam(value = "id") int id, @RequestParam(value = "message") String message) {
-		GreetingDto greetingDto = new GreetingDto(id, message);
+	public ResponseEntity<GreetingDto> greeting(@RequestBody GreetingDto greetingDto) {
 		greetingDtos.add(greetingDto);
 		log.info(getGreetings());
 		ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();

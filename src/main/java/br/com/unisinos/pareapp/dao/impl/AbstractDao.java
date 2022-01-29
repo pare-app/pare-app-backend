@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,9 +30,9 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
     @Override
     public Optional<T> find(final Integer id) {
         EntityManager entityManager = begingTransaction();
-        T result = entityManager.find(type, id);
+        Optional<T> result = ofNullable(entityManager.find(type, id));
         closeTransaction(entityManager);
-        return ofNullable(result);
+        return result;
     }
 
     @Override
@@ -52,11 +53,13 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
         parameters.forEach((key, value) -> query.where(
                 builder.equal(root.get(key), value)
         ));
-        T result = entityManager.createQuery(query).getResultList().get(0);
+
+        Optional<List<T>> resultList = ofNullable(entityManager.createQuery(query).getResultList());
+        Optional<T> result = resultList.map(list -> list.get(0));
 
         closeTransaction(entityManager);
 
-        return ofNullable(result);
+        return result;
     }
 
     protected void closeTransaction(EntityManager entityManager) {
