@@ -1,0 +1,23 @@
+app:
+  security:
+    publicUrls: /public/**,/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html
+    issuer: pare-app
+    secretKey: ${SECRET_KEY}
+    tokenExpirationMinutes: 10
+
+# jpa properties
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  properties:
+    hibernate:
+      show_sql: true
+      format_sql: true
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL}

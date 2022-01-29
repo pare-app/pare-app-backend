@@ -25,11 +25,11 @@ public class JwtTokenService implements Clock, TokenService {
     private static final GzipCompressionCodec COMPRESSION_CODEC = new GzipCompressionCodec();
 
     @Value("${app.security.issuer}")
-    private final String issuer = "pare-app";
+    private String issuer;
     @Value("${app.security.secretKey}")
-    private final String secretKey = BASE64.encode("www.pareapp.com.br");
+    private String secretKey;
     @Value("${app.security.tokenExpirationMinutes}")
-    private final int tokenExpirationMinutes = 5;
+    private int tokenExpirationMinutes;
 
     public String newToken(Map<String, String> attributes) {
         DateTime now = DateTime.now();
