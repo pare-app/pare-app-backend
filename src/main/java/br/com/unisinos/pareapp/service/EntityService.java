@@ -8,4 +8,5 @@ public interface EntityService<T extends BaseEntity> {
     T save(T entity);
     Optional<T> find(Integer id);
     Optional<T> find(T entity);
+    T remove(Integer id);
 }

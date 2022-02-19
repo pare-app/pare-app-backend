@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
                 content = @Content),
         @ApiResponse(responseCode = "401", description = "Não autorizado",
                 content = @Content),
+        @ApiResponse(responseCode = "404", description = "Não encontrado",
+                content = @Content),
         @ApiResponse(responseCode = "500", description = "Erro de persistência",
                 content = @Content)
 })

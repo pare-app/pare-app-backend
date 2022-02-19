@@ -1,15 +1,16 @@
 package br.com.unisinos.pareapp.model.dto.user;
 
-import br.com.unisinos.pareapp.model.dto.BaseDto;
+import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
-public class UserDto extends BaseDto {
+@SuperBuilder
+public class UserEntityDto extends BaseEntityDto {
     private String name;
     private String username;
     @JsonIgnore

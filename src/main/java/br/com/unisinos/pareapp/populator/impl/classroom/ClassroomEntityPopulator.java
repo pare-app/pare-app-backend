@@ -1,64 +1,72 @@
 package br.com.unisinos.pareapp.populator.impl.classroom;
 
-import br.com.unisinos.pareapp.model.dto.classroom.ClassroomDto;
-import br.com.unisinos.pareapp.model.dto.user.UserDto;
+import br.com.unisinos.pareapp.exception.EntityNotFoundException;
+import br.com.unisinos.pareapp.facade.UserFacade;
+import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
+import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.model.entity.Classroom;
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.populator.EntityPopulator;
 import br.com.unisinos.pareapp.populator.impl.user.UserEntityPopulator;
+import br.com.unisinos.pareapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class ClassroomEntityPopulator implements EntityPopulator<Classroom, ClassroomDto> {
+public class ClassroomEntityPopulator implements EntityPopulator<Classroom, ClassroomEntityDto> {
     private final UserEntityPopulator userEntityPopulator;
+    private final UserService userService;
 
     @Override
-    public ClassroomDto populate(Classroom source) {
+    public ClassroomEntityDto populate(Classroom source) {
         if(source == null) return null;
 
-        UserDto ownerDto = userEntityPopulator.populate(source.getOwner());
-        List<UserDto> studentsDto = new ArrayList<>();
+        UserEntityDto ownerDto = userEntityPopulator.populate(source.getOwner());
+        Set<UserEntityDto> studentsDto = new HashSet<>();
         if(source.getStudents() != null) {
             studentsDto = source.getStudents()
                     .stream()
                     .map(userEntityPopulator::populate)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         }
-        ClassroomDto classroomDto = ClassroomDto.builder()
+        return ClassroomEntityDto.builder()
                 .name(source.getName())
                 .owner(ownerDto)
                 .students(studentsDto)
+                .id(source.getId())
                 .build();
-
-        classroomDto.setId(source.getId());
-
-        return classroomDto;
     }
 
     @Override
-    public Classroom inversePopulate(ClassroomDto target) {
-        if(target == null) return null;
+    public Classroom inversePopulate(ClassroomEntityDto target) {
+        if(target == null) throw new IllegalArgumentException();
+        User owner = null;
+        if(target.getOwner() != null) {
+            User ownerEntity = userEntityPopulator.inversePopulate(target.getOwner());
+             owner = userService.find(ownerEntity).orElseThrow(EntityNotFoundException::new);
+        }
 
-        User owner = userEntityPopulator.inversePopulate(target.getOwner());
-        List<User> students = new ArrayList<>();
+        Set<User> students = new HashSet<>();
         if(target.getStudents() != null) {
             students = target.getStudents()
                     .stream()
-                    .map(userEntityPopulator::inversePopulate)
-                    .collect(Collectors.toList());
+                    .map(student -> userService.find(
+                            userEntityPopulator.inversePopulate(student))
+                            .orElseThrow(EntityNotFoundException::new))
+                    .collect(Collectors.toSet());
         }
-        Classroom classroom = Classroom.builder()
+        return Classroom.builder()
                 .name(target.getName())
                 .owner(owner)
                 .students(students)
+                .id(target.getId())
                 .build();
-        classroom.setId(target.getId());
-        return classroom;
     }
 }

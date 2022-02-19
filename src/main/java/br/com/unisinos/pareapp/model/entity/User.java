@@ -2,8 +2,7 @@ package br.com.unisinos.pareapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.URL;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,8 +11,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,6 +30,8 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     @NotEmpty(message = "empty password")
     private String password;
+    @ManyToMany(mappedBy = "students",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Classroom> classrooms;
 
     @JsonIgnore
     @Override

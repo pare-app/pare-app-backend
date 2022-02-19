@@ -1,10 +1,9 @@
 package br.com.unisinos.pareapp.dao.impl;
 
 import br.com.unisinos.pareapp.dao.BaseDao;
-import br.com.unisinos.pareapp.model.dto.BaseDto;
 import br.com.unisinos.pareapp.model.entity.BaseEntity;
-import br.com.unisinos.pareapp.model.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,30 +24,37 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
-    protected final Class<T> type;
-
     @Override
     public Optional<T> find(final Integer id) {
-        EntityManager entityManager = begingTransaction();
-        Optional<T> result = ofNullable(entityManager.find(type, id));
+        EntityManager entityManager = beginTransaction();
+        Optional<T> result = ofNullable(entityManager.find(getType(), id));
         closeTransaction(entityManager);
         return result;
     }
 
+    public Optional<T> find(T entity) {
+        if(entity.getId() != null) return find(entity.getId());
+        return parameterizedFind(entity);
+    }
+
+    protected abstract Optional<T> parameterizedFind(T entity);
+
+    protected abstract Class<T> getType();
+
     @Override
     public T save(T entity) {
-        EntityManager entityManager = begingTransaction();
-        entityManager.persist(entity);
+        EntityManager entityManager = beginTransaction();
+        T persisted = entityManager.merge(entity);
         closeTransaction(entityManager);
-        return entity;
+        return persisted;
     }
 
     protected Optional<T> findBy(Map<String, String> parameters) {
-        EntityManager entityManager = begingTransaction();
+        EntityManager entityManager = beginTransaction();
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(type);
-        Root<T> root = query.from(type);
+        CriteriaQuery<T> query = builder.createQuery(getType());
+        Root<T> root = query.from(getType());
         query.select(root);
         parameters.forEach((key, value) -> query.where(
                 builder.equal(root.get(key), value)
@@ -67,9 +73,17 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
         entityManager.close();
     }
 
-    protected EntityManager begingTransaction() {
+    protected EntityManager beginTransaction() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         return entityManager;
+    }
+
+    public T remove(Integer id) {
+        EntityManager entityManager = beginTransaction();
+        T entity = entityManager.find(getType(), id);
+        entityManager.remove(entity);
+        closeTransaction(entityManager);
+        return entity;
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,7 +12,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class BaseDto {
+@SuperBuilder
+public abstract class BaseEntityDto {
     private Integer id;
     @Override
     public String toString() {

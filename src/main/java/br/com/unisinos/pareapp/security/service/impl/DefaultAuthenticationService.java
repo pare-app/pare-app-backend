@@ -1,10 +1,11 @@
 package br.com.unisinos.pareapp.security.service.impl;
 
 
-import br.com.unisinos.pareapp.model.dto.user.UserDto;
+import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.security.service.TokenService;
 import br.com.unisinos.pareapp.security.service.AuthenticationService;
+import br.com.unisinos.pareapp.service.impl.SessionService;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +24,21 @@ import static java.util.Optional.ofNullable;
 public class DefaultAuthenticationService implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService jwtTokenService;
+    private final SessionService sessionService;
 
     @Override
-    public Optional<String> login(UserDto userDto) {
+    public Optional<String> login(UserEntityDto userDto) {
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
 
         User user = (User) authenticate.getPrincipal();
 
+        sessionService.setLoggedUser(user);
         return ofNullable(jwtTokenService.newToken(ImmutableMap.of("username", user.getUsername())));
     }
 
     @Override
     public void logout(User user) {
-        // TODO document why this method is empty
+        sessionService.getSession().invalidate();
     }
 }

@@ -12,9 +12,6 @@ import java.util.Optional;
 @Component
 @Transactional
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
-    DefaultUserDao(){
-        super(User.class);
-    }
 
     @Override
     public Optional<User> findByUsername(String username) {
@@ -24,11 +21,15 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> find(User user) {
-        if(user.getId() != null) return find(user.getId());
+    protected Optional<User> parameterizedFind(User user) {
         Map<String,String> parameters = new HashMap<>();
         if(user.getUsername() != null) parameters.put("username", user.getUsername());
         if(user.getName() != null) parameters.put("name", user.getName());
         return findBy(parameters);
+    }
+
+    @Override
+    protected Class<User> getType() {
+        return User.class;
     }
 }

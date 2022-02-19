@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConnectionDto {
-    private UserEntityDto user;
-    private String token;
+public class UserReferenceDto {
+    private Integer id;
 }
