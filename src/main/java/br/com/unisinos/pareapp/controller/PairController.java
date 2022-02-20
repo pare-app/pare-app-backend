@@ -51,7 +51,7 @@ public class PairController extends BaseController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PairEntityDto.class)) })
     })
-    @PostMapping("remove/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<PairEntityDto> remove(
             @PathVariable(name = "id") Integer id) {
         Optional<PairEntityDto> foundPair = pairFacade.find(id);
@@ -71,7 +71,7 @@ public class PairController extends BaseController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PairEntityDto.class)) })
     })
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<PairEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         Optional<PairEntityDto> foundPair = pairFacade.find(id);

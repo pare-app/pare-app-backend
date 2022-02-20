@@ -77,7 +77,7 @@ public class ClassroomController extends BaseController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ClassroomEntityDto.class)) })
     })
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<ClassroomEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         Optional<ClassroomEntityDto> foundClassroom = classroomFacade.find(id);

@@ -74,7 +74,7 @@ public class UserController extends BaseController {
                             schema = @Schema(implementation = UserEntityDto.class)) })
     })
     @SecurityRequirement(name = "pare-app-api")
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<UserEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         Optional<UserEntityDto> foundUser = userFacade.find(id);
