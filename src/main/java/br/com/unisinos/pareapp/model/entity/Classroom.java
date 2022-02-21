@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -22,12 +20,18 @@ import java.util.Set;
 public class Classroom extends BaseEntity {
     @NotEmpty(message = "empty name")
     private String name;
+
     @NotNull(message = "empty owner")
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> students;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Exercise> exercises;
+
     @OneToMany(mappedBy = "classroom",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Pair> pairs;
 }
