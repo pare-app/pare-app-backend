@@ -8,7 +8,7 @@ import br.com.unisinos.pareapp.model.entity.Classroom;
 import br.com.unisinos.pareapp.model.entity.Pair;
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.populator.EntityPopulator;
-import br.com.unisinos.pareapp.service.ClassroomService;
+import br.com.unisinos.pareapp.service.EntityService;
 import br.com.unisinos.pareapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class PairEntityPopulator implements EntityPopulator<Pair, PairEntityDto> {
     private final EntityPopulator<Classroom, ClassroomEntityDto> classroomEntityPopulator;
     private final EntityPopulator<User, UserEntityDto> userEntityPopulator;
-    private final ClassroomService classroomService;
+    private final EntityService<Classroom> classroomService;
     private final UserService userService;
 
     @Override

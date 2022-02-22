@@ -3,7 +3,6 @@ package br.com.unisinos.pareapp.service.impl;
 import br.com.unisinos.pareapp.dao.BaseDao;
 import br.com.unisinos.pareapp.model.entity.Pair;
 import br.com.unisinos.pareapp.model.entity.User;
-import br.com.unisinos.pareapp.service.PairService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultPairService extends AbstractEntityService<Pair> implements PairService {
+public class DefaultPairService extends AbstractEntityService<Pair> {
     private final BaseDao<Pair> pairDao;
 
     @Override
@@ -19,7 +18,7 @@ public class DefaultPairService extends AbstractEntityService<Pair> implements P
         return pairDao;
     }
 
-    @Override
+    //TODO: Finalizar método
     public Set<Pair> getPairsForStudent(User student) {
         Pair paramPair = Pair.builder()
                 .student1(student)

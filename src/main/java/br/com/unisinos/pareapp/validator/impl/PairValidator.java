@@ -1,7 +1,8 @@
 package br.com.unisinos.pareapp.validator.impl;
 
+import br.com.unisinos.pareapp.model.entity.Classroom;
 import br.com.unisinos.pareapp.model.entity.Pair;
-import br.com.unisinos.pareapp.service.ClassroomService;
+import br.com.unisinos.pareapp.service.EntityService;
 import br.com.unisinos.pareapp.service.UserService;
 import br.com.unisinos.pareapp.validator.Validator;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PairValidator implements Validator<Pair> {
     private final UserService userService;
-    private final ClassroomService classroomService;
+    private final EntityService<Classroom> classroomService;
     @Override
     public boolean validate(Pair entity) {
         if(entity == null) return false;
