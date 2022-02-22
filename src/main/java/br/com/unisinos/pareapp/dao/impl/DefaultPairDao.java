@@ -1,10 +1,8 @@
 package br.com.unisinos.pareapp.dao.impl;
 
-import br.com.unisinos.pareapp.dao.PairDao;
 import br.com.unisinos.pareapp.model.entity.Pair;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,15 +10,7 @@ import java.util.Optional;
 
 @Component
 @Transactional
-public class DefaultPairDao extends AbstractDao<Pair> implements PairDao {
-
-    @Override
-    public Pair save(Pair entity) {
-        EntityManager entityManager = beginTransaction();
-        Pair persisted = entityManager.merge(entity);
-        closeTransaction(entityManager);
-        return persisted;
-    }
+public class DefaultPairDao extends AbstractDao<Pair> {
 
     @Override
     protected Optional<Pair> parameterizedFind(Pair pair) {

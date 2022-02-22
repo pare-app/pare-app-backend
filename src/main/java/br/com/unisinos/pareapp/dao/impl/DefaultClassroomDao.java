@@ -1,6 +1,5 @@
 package br.com.unisinos.pareapp.dao.impl;
 
-import br.com.unisinos.pareapp.dao.ClassroomDao;
 import br.com.unisinos.pareapp.model.entity.Classroom;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,7 @@ import java.util.Optional;
 
 @Component
 @Transactional
-public class DefaultClassroomDao extends AbstractDao<Classroom> implements ClassroomDao {
+public class DefaultClassroomDao extends AbstractDao<Classroom> {
 
     @Override
     protected Optional<Classroom> parameterizedFind(Classroom classroom) {

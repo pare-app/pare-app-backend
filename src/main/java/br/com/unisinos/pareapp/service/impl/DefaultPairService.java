@@ -1,7 +1,6 @@
 package br.com.unisinos.pareapp.service.impl;
 
 import br.com.unisinos.pareapp.dao.BaseDao;
-import br.com.unisinos.pareapp.dao.PairDao;
 import br.com.unisinos.pareapp.model.entity.Pair;
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.service.PairService;
@@ -13,7 +12,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class DefaultPairService extends AbstractEntityService<Pair> implements PairService {
-    private final PairDao pairDao;
+    private final BaseDao<Pair> pairDao;
 
     @Override
     protected BaseDao<Pair> getDao() {

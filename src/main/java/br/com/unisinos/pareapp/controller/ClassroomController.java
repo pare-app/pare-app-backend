@@ -2,11 +2,9 @@ package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.ClassroomFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomCreationDto;
-import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEditionDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
-import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.populator.Populator;
-import br.com.unisinos.pareapp.service.impl.SessionService;
+import br.com.unisinos.pareapp.service.impl.HttpSessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,10 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +24,7 @@ import java.util.Optional;
 public class ClassroomController extends BaseController {
     private final ClassroomFacade classroomFacade;
     private final Populator<ClassroomCreationDto, ClassroomEntityDto> classroomCreationPopulator;
-    private final SessionService sessionService;
+    private final HttpSessionService httpSessionService;
 
     @Operation(summary = "Cria Turma")
     @ApiResponses(value = {

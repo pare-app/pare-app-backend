@@ -8,7 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpSession;
 
 @Service
-public class SessionService {
+public class HttpSessionService {
 
     public static final String CONNECTED_USER = "user";
 
