@@ -1,6 +1,6 @@
 package br.com.unisinos.pareapp.controller;
 
-import br.com.unisinos.pareapp.facade.ClassroomFacade;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomCreationDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.populator.Populator;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "pare-app-api")
 public class ClassroomController extends BaseController {
-    private final ClassroomFacade classroomFacade;
+    private final EntityFacade<ClassroomEntityDto> classroomFacade;
     private final Populator<ClassroomCreationDto, ClassroomEntityDto> classroomCreationPopulator;
     private final HttpSessionService httpSessionService;
 

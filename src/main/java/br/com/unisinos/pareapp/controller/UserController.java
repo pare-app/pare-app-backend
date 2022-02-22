@@ -1,7 +1,6 @@
 package br.com.unisinos.pareapp.controller;
 
-import br.com.unisinos.pareapp.facade.UserFacade;
-import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.user.ConnectionDto;
 import br.com.unisinos.pareapp.model.dto.user.LoginDto;
 import br.com.unisinos.pareapp.model.dto.user.RegisterDto;
@@ -30,7 +29,7 @@ import java.util.Optional;
 public class UserController extends BaseController {
 
     private final AuthenticationService authentication;
-    private final UserFacade userFacade;
+    private final EntityFacade<UserEntityDto> userFacade;
     private final Populator<LoginDto, UserEntityDto> userLoginPopulator;
     private final Populator<RegisterDto, UserEntityDto> userRegisterPopulator;
 

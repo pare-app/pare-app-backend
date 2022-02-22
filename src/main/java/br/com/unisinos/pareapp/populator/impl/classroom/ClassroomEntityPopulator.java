@@ -1,7 +1,6 @@
 package br.com.unisinos.pareapp.populator.impl.classroom;
 
 import br.com.unisinos.pareapp.exception.EntityNotFoundException;
-import br.com.unisinos.pareapp.facade.UserFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.model.entity.Classroom;
@@ -12,9 +11,7 @@ import br.com.unisinos.pareapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

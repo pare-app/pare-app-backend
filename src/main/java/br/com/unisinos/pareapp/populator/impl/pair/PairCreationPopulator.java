@@ -1,7 +1,6 @@
 package br.com.unisinos.pareapp.populator.impl.pair;
 
-import br.com.unisinos.pareapp.facade.ClassroomFacade;
-import br.com.unisinos.pareapp.facade.UserFacade;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairCreationDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
@@ -15,8 +14,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class PairCreationPopulator implements Populator<PairCreationDto, PairEntityDto> {
-    private final ClassroomFacade classroomFacade;
-    private final UserFacade userFacade;
+    private final EntityFacade<ClassroomEntityDto> classroomFacade;
+    private final EntityFacade<UserEntityDto> userFacade;
 
     @Override
     public PairEntityDto populate(PairCreationDto source) {

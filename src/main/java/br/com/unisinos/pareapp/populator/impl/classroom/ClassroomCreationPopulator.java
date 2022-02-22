@@ -1,6 +1,6 @@
 package br.com.unisinos.pareapp.populator.impl.classroom;
 
-import br.com.unisinos.pareapp.facade.UserFacade;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomCreationDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class ClassroomCreationPopulator implements Populator<ClassroomCreationDto, ClassroomEntityDto> {
-    private final UserFacade userFacade;
+    private final EntityFacade<UserEntityDto> userFacade;
 
     @Override
     public ClassroomEntityDto populate(ClassroomCreationDto source) {

@@ -1,6 +1,6 @@
 package br.com.unisinos.pareapp.controller;
 
-import br.com.unisinos.pareapp.facade.PairFacade;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.pair.PairCreationDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.populator.Populator;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @SecurityRequirement(name = "pare-app-api")
 public class PairController extends BaseController {
     private final Populator<PairCreationDto, PairEntityDto> pairCreationPopulator;
-    private final PairFacade pairFacade;
+    private final EntityFacade<PairEntityDto> pairFacade;
 
     @Operation(summary = "Cria Par")
     @ApiResponses(value = {

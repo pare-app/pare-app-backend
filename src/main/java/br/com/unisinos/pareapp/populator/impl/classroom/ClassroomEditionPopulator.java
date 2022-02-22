@@ -1,11 +1,10 @@
 package br.com.unisinos.pareapp.populator.impl.classroom;
 
-import br.com.unisinos.pareapp.facade.UserFacade;
+import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEditionDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.UserReferenceDto;
-import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.populator.Populator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class ClassroomEditionPopulator implements Populator<ClassroomEditionDto, ClassroomEntityDto> {
-    private final UserFacade userFacade;
+    private final EntityFacade<UserEntityDto> userFacade;
     private final Populator<UserReferenceDto, UserEntityDto> userReferencePopulator;
 
     @Override
