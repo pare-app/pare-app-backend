@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 @SuperBuilder
@@ -19,8 +19,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Solution extends BaseEntity {
     @NotNull(message = "empty question")
-    @ManyToOne
-    @JoinColumn(name = "question_id")
+    @OneToOne
     private Question question;
 
     @NotNull(message = "empty image")

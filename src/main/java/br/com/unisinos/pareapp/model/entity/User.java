@@ -32,7 +32,7 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     @NotEmpty(message = "empty password")
     private String password;
-    @ManyToMany(mappedBy = "students",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "students",fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Classroom> classrooms;
 
     @JsonIgnore

@@ -5,8 +5,8 @@ import br.com.unisinos.pareapp.model.dto.user.ConnectionDto;
 import br.com.unisinos.pareapp.model.dto.user.LoginDto;
 import br.com.unisinos.pareapp.model.dto.user.RegisterDto;
 import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
-import br.com.unisinos.pareapp.populator.Populator;
 import br.com.unisinos.pareapp.security.service.AuthenticationService;
+import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,8 +30,8 @@ public class UserController extends BaseController {
 
     private final AuthenticationService authentication;
     private final EntityFacade<UserEntityDto> userFacade;
-    private final Populator<LoginDto, UserEntityDto> userLoginPopulator;
-    private final Populator<RegisterDto, UserEntityDto> userRegisterPopulator;
+    private final Mapper<LoginDto, UserEntityDto> userLoginConverter;
+    private final Mapper<RegisterDto, UserEntityDto> userRegisterConverter;
 
     @Operation(summary = "Cria usuário")
     @ApiResponses(value = {
@@ -42,7 +42,7 @@ public class UserController extends BaseController {
     @PostMapping("/register")
     public ResponseEntity<ConnectionDto> register(
             @RequestBody RegisterDto registerDto) {
-        UserEntityDto userDto = userRegisterPopulator.populate(registerDto);
+        UserEntityDto userDto = userRegisterConverter.convert(registerDto);
         Optional<UserEntityDto> result;
         try {
             result = userFacade.save(userDto);
@@ -61,7 +61,7 @@ public class UserController extends BaseController {
     @PostMapping("/login")
     public ResponseEntity<ConnectionDto> login(
             @RequestBody LoginDto loginDto) {
-        UserEntityDto userDto = userLoginPopulator.populate(loginDto);
+        UserEntityDto userDto = userLoginConverter.convert(loginDto);
         Optional<UserEntityDto> persisted = userFacade.find(userDto);
         return doLogin(persisted,loginDto.getPassword());
     }

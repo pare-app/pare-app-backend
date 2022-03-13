@@ -26,12 +26,12 @@ public class Classroom extends BaseEntity {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<User> students;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "classrooms", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Exercise> exercises;
 
-    @OneToMany(mappedBy = "classroom",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "classroom",fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Pair> pairs;
 }

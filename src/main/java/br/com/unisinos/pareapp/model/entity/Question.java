@@ -17,13 +17,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Question extends BaseEntity {
-    @ManyToMany(mappedBy = "questions",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Exercise> exercises;
 
     @NotNull(message = "empty image")
     private byte[] image;
 
-    @OneToOne
-    @JoinColumn(name = "solution_id")
+    @OneToOne(mappedBy="question")
     private Solution solution;
+
+    private String description;
 }

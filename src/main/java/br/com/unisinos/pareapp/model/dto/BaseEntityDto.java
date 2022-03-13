@@ -1,5 +1,6 @@
 package br.com.unisinos.pareapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public abstract class BaseEntityDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BaseEntityDto {
     private Integer id;
     @Override
     public String toString() {

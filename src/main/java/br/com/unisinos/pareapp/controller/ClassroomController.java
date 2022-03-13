@@ -3,8 +3,7 @@ package br.com.unisinos.pareapp.controller;
 import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomCreationDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
-import br.com.unisinos.pareapp.populator.Populator;
-import br.com.unisinos.pareapp.service.impl.HttpSessionService;
+import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,16 +14,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/classroom")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "pare-app-api")
-public class ClassroomController extends BaseController {
+public class ClassroomController extends AbstractController<ClassroomEntityDto,ClassroomCreationDto> {
     private final EntityFacade<ClassroomEntityDto> classroomFacade;
-    private final Populator<ClassroomCreationDto, ClassroomEntityDto> classroomCreationPopulator;
-    private final HttpSessionService httpSessionService;
+    private final Mapper<ClassroomCreationDto, ClassroomEntityDto> classroomCreationConverter;
+
+    @Override
+    protected EntityFacade<ClassroomEntityDto> getFacade() {
+        return this.classroomFacade;
+    }
+
+    @Override
+    protected Mapper<ClassroomCreationDto, ClassroomEntityDto> getCreationConverter() {
+        return classroomCreationConverter;
+    }
 
     @Operation(summary = "Cria Turma")
     @ApiResponses(value = {
@@ -33,39 +39,26 @@ public class ClassroomController extends BaseController {
                             schema = @Schema(implementation = ClassroomEntityDto.class)) })
     })
     @PostMapping("create")
+    @Override
     public ResponseEntity<ClassroomEntityDto> create(
             @RequestBody ClassroomCreationDto classroomCreationDto) {
-        ClassroomEntityDto classroomDto = classroomCreationPopulator.populate(classroomCreationDto);
-
-        Optional<ClassroomEntityDto> result;
-        try {
-            result = classroomFacade.save(classroomDto);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-        return result.map(dto -> ResponseEntity.ok().body(dto))
-                .orElseGet(() -> ResponseEntity.internalServerError().build());
+        return super.create(classroomCreationDto);
     }
 
+    @Override
     @Operation(summary = "Edita Turma")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Turma editada com sucesso",
+            @ApiResponse(responseCode = "201", description = "Turma editada com sucesso",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ClassroomEntityDto.class)) })
     })
     @PostMapping("edit")
     public ResponseEntity<ClassroomEntityDto> edit(
             @RequestBody ClassroomEntityDto classroomDto) {
-        if(classroomFacade.find(classroomDto).isPresent()) {
-            Optional<ClassroomEntityDto> optional = classroomFacade.save(classroomDto);
-            return optional
-                    .map(persisted -> ResponseEntity.ok().body(persisted))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return super.edit(classroomDto);
     }
 
+    @Override
     @Operation(summary = "Retorna Turma")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Turma retornada com sucesso",
@@ -75,13 +68,6 @@ public class ClassroomController extends BaseController {
     @GetMapping("{id}")
     public ResponseEntity<ClassroomEntityDto> get(
             @PathVariable(name = "id") Integer id) {
-        Optional<ClassroomEntityDto> foundClassroom = classroomFacade.find(id);
-        if(foundClassroom.isPresent()) {
-            return foundClassroom
-                    .map(found -> ResponseEntity.ok().body(found))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return super.get(id);
     }
 }

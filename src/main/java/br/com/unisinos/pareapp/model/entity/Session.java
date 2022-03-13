@@ -25,8 +25,8 @@ public class Session extends BaseEntity{
     @NotNull(message = "empty pair")
     @ManyToOne
     @JoinColumn(name = "pair_id")
-    private Exercise pair;
+    private Pair pair;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Solution> solutions;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<Answer> answers;
 }

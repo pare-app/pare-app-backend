@@ -2,7 +2,7 @@ package br.com.unisinos.pareapp.validator.impl;
 
 import br.com.unisinos.pareapp.model.entity.Classroom;
 import br.com.unisinos.pareapp.model.entity.User;
-import br.com.unisinos.pareapp.service.UserService;
+import br.com.unisinos.pareapp.service.IUserService;
 import br.com.unisinos.pareapp.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Component
 @RequiredArgsConstructor
 public class ClassroomValidator implements Validator<Classroom> {
-    private final UserService userService;
+    private final IUserService userService;
     @Override
     public boolean validate(Classroom entity) {
         if(entity == null) return false;

@@ -1,18 +1,14 @@
 package br.com.unisinos.pareapp.security;
 
 import br.com.unisinos.pareapp.model.entity.User;
-import br.com.unisinos.pareapp.security.service.AuthenticationService;
 import br.com.unisinos.pareapp.security.service.impl.JwtTokenService;
-import br.com.unisinos.pareapp.service.UserService;
+import br.com.unisinos.pareapp.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -33,7 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
-    private final UserService userService;
+    private final IUserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

@@ -14,5 +14,5 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
         @ApiResponse(responseCode = "500", description = "Erro de persistência",
                 content = @Content)
 })
-public class BaseController {
+public abstract class BaseController {
 }
