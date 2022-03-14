@@ -19,8 +19,8 @@ import java.util.Set;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuestionEntityDto extends BaseEntityDto {
-    private Set<ExerciseEntityDto> exercises;
-    private byte[] image;
-    private SolutionEntityDto solution;
     private String description;
+    private byte[] image;
+    private Set<ExerciseEntityDto> exercises;
+    private SolutionEntityDto solution;
 }

@@ -172,6 +172,9 @@ public class StandardConverters {
                     .into(BaseEntityDto::setId)
                 .from(Classroom::getName)
                     .into(ClassroomEntityDto::setName)
+                .from(Classroom::getOwner)
+                    .map(owner -> userLoopConverter().convert(owner))
+                    .into(ClassroomEntityDto::setOwner)
                 .build();
     }
 
@@ -191,7 +194,8 @@ public class StandardConverters {
                     .orElse(Sets.newHashSet())
                     .into(ClassroomEntityDto::setExercises)
                 .from(Classroom::getPairs)
-                    .given(Objects::nonNull, pairs -> Sets.newHashSet(pairLoopConverter().convert(pairs)))
+                    .given(Objects::nonNull, pairs -> Sets.newHashSet(pairStandardConverter()
+                            .convert(pairs)))
                     .orElse(Sets.newHashSet())
                     .into(ClassroomEntityDto::setPairs)
                 .build();
