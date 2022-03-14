@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @SuperBuilder
@@ -17,9 +15,13 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"question_id"})
+})
 public class Solution extends BaseEntity {
     @NotNull(message = "empty question")
     @OneToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @NotNull(message = "empty image")

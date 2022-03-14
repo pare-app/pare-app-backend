@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> extends Base
         Optional<T> result;
         try {
             result = getFacade().save(entityDto);
+        } catch (RollbackException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -50,6 +53,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> extends Base
                 optional = getFacade().save(entityDto);
             } catch (EntityNotFoundException e) {
                 return ResponseEntity.notFound().build();
+            } catch (RollbackException e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
             } catch (Exception e){
                 return ResponseEntity.badRequest().build();
             }

@@ -22,9 +22,9 @@ spring:
     password: ${DATABASE_PASSWORD}
     url: ${DATABASE_URL}
 
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type: TRACE
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+##        type: TRACE

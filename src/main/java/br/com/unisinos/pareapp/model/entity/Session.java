@@ -16,6 +16,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                columnNames = {
+                        "exercise_id",
+                        "pair_id"}
+        )})
 public class Session extends BaseEntity{
     @NotNull(message = "empty exercise")
     @ManyToOne
