@@ -5,6 +5,7 @@ import br.com.unisinos.pareapp.model.dto.answer.AnswerCreationDto;
 import br.com.unisinos.pareapp.model.dto.answer.AnswerEntityDto;
 import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/answer")
@@ -68,6 +71,18 @@ public class AnswerController extends AbstractController<AnswerEntityDto, Answer
     public ResponseEntity<AnswerEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         return super.get(id);
+    }
+
+    @Operation(summary = "Retorna todas as Resposta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Respostas retornadas com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = AnswerEntityDto.class)))})
+    })
+    @Override
+    @GetMapping({"","/"})
+    public ResponseEntity<List<AnswerEntityDto>> get() {
+        return super.get();
     }
 
     @Operation(summary = "Remove Resposta")

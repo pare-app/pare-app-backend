@@ -1,11 +1,14 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionCreationDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionEntityDto;
+import br.com.unisinos.pareapp.model.entity.Session;
 import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +17,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/session")
@@ -83,5 +88,17 @@ public class SessionController extends AbstractController <SessionEntityDto, Ses
     public ResponseEntity<SessionEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         return super.get(id);
+    }
+
+    @Operation(summary = "Retorna todas as Sessões")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sessões retornadas com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = SessionEntityDto.class)))})
+    })
+    @Override
+    @GetMapping({"","/"})
+    public ResponseEntity<List<SessionEntityDto>> get() {
+        return super.get();
     }
 }

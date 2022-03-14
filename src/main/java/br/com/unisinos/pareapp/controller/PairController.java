@@ -1,10 +1,12 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairCreationDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +15,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pair")
@@ -71,5 +75,17 @@ public class PairController extends AbstractController<PairEntityDto,PairCreatio
     public ResponseEntity<PairEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         return super.get(id);
+    }
+
+    @Operation(summary = "Retorna todos os Pares")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pares retornados com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PairEntityDto.class)))})
+    })
+    @Override
+    @GetMapping({"","/"})
+    public ResponseEntity<List<PairEntityDto>> get() {
+        return super.get();
     }
 }

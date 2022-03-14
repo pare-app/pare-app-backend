@@ -2,6 +2,7 @@ package br.com.unisinos.pareapp.dao.impl;
 
 import br.com.unisinos.pareapp.dao.BaseDao;
 import br.com.unisinos.pareapp.model.entity.BaseEntity;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Propagation;
 
@@ -50,6 +51,11 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
     }
 
     protected Optional<T> findBy(Map<String, String> parameters) {
+        Optional<List<T>> all = findAllBy(parameters);
+        return all.map(list -> list.get(0));
+    }
+
+    protected Optional<List<T>> findAllBy(Map<String, String> parameters) {
         EntityManager entityManager = beginTransaction();
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -59,13 +65,15 @@ public abstract class AbstractDao<T extends BaseEntity> implements BaseDao<T> {
         parameters.forEach((key, value) -> query.where(
                 builder.equal(root.get(key), value)
         ));
-
         Optional<List<T>> resultList = ofNullable(entityManager.createQuery(query).getResultList());
-        Optional<T> result = resultList.map(list -> list.get(0));
 
         closeTransaction(entityManager);
 
-        return result;
+        return resultList;
+    }
+
+    public Optional<List<T>> findAll() {
+        return findAllBy(Maps.newHashMap());
     }
 
     protected void closeTransaction(EntityManager entityManager) {

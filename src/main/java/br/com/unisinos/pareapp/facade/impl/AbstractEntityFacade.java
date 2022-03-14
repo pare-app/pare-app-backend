@@ -7,6 +7,7 @@ import br.com.unisinos.pareapp.service.EntityService;
 import com.github.roookeee.datus.api.Mapper;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractEntityFacade<T extends BaseEntityDto, E extends BaseEntity> implements EntityFacade<T> {
@@ -31,6 +32,12 @@ public abstract class AbstractEntityFacade<T extends BaseEntityDto, E extends Ba
     public Optional<T> find(Integer id) {
         E entity = getService().find(id).orElseThrow(EntityNotFoundException::new);
         return getDto(entity);
+    }
+
+    @Override
+    public Optional<List<T>> findAll() {
+        List<E> entities = getService().findAll().orElseThrow(EntityNotFoundException::new);
+        return Optional.ofNullable(getStandardConverter().convert(entities));
     }
 
     @Override

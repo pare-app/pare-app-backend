@@ -6,6 +6,7 @@ import br.com.unisinos.pareapp.service.EntityService;
 import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +28,11 @@ public abstract class AbstractEntityService<T extends BaseEntity> implements Ent
     @Override
     public Optional<T> find(T entity) {
         return getDao().find(entity);
+    }
+
+    @Override
+    public Optional<List<T>> findAll() {
+        return getDao().findAll();
     }
 
     @Override

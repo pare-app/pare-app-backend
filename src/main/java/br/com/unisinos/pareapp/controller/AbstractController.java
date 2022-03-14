@@ -85,6 +85,25 @@ public abstract class AbstractController<T extends BaseEntityDto,C> extends Base
         return ResponseEntity.notFound().build();
     }
 
+    public ResponseEntity<List<T>> get() {
+        Optional<List<T>> found;
+        try {
+            found = getFacade().findAll();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(found.isPresent()) {
+            return found
+                    .map(entities-> ResponseEntity.ok().body(entities))
+                    .orElseGet(() -> ResponseEntity.badRequest().build());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     public ResponseEntity<T> remove(Integer id) {
         Optional<T> found;
         try {

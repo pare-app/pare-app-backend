@@ -1,6 +1,7 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.ConnectionDto;
 import br.com.unisinos.pareapp.model.dto.user.LoginDto;
 import br.com.unisinos.pareapp.model.dto.user.RegisterDto;
@@ -8,6 +9,7 @@ import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.security.service.AuthenticationService;
 import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,12 +29,23 @@ import java.util.Optional;
         @ApiResponse(responseCode = "401", description = "Usuário e/ou senha inválidos",
                 content = @Content)
 })
-public class UserController extends BaseController {
+public class UserController extends AbstractController<UserEntityDto,RegisterDto> {
 
     private final AuthenticationService authentication;
     private final EntityFacade<UserEntityDto> userFacade;
     private final Mapper<LoginDto, UserEntityDto> userLoginConverter;
     private final Mapper<RegisterDto, UserEntityDto> userRegisterConverter;
+
+
+    @Override
+    protected EntityFacade<UserEntityDto> getFacade() {
+        return userFacade;
+    }
+
+    @Override
+    protected Mapper<RegisterDto, UserEntityDto> getCreationConverter() {
+        return userRegisterConverter;
+    }
 
     @Operation(summary = "Cria usuário")
     @ApiResponses(value = {
@@ -97,5 +111,18 @@ public class UserController extends BaseController {
         Optional<String> result = authentication.login(userDto);
         return result.map(token -> ResponseEntity.ok().body(new ConnectionDto(userDto,token)))
                 .orElseGet(() -> ResponseEntity.internalServerError().build());
+    }
+
+    @SecurityRequirement(name = "pare-app-api")
+    @Operation(summary = "Retorna todos os Usuários")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários retornados com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserEntityDto.class)))})
+    })
+    @Override
+    @GetMapping({"","/"})
+    public ResponseEntity<List<UserEntityDto>> get() {
+        return super.get();
     }
 }

@@ -1,11 +1,13 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionCreationDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import com.github.roookeee.datus.api.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -85,5 +88,17 @@ public class QuestionController extends AbstractController<QuestionEntityDto, Qu
     public ResponseEntity<QuestionEntityDto> remove(
             @PathVariable(name = "id") Integer id) {
         return super.remove(id);
+    }
+
+    @Operation(summary = "Retorna todas as Questões")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Questões retornadas com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = QuestionEntityDto.class)))})
+    })
+    @Override
+    @GetMapping({"","/"})
+    public ResponseEntity<List<QuestionEntityDto>> get() {
+        return super.get();
     }
 }
