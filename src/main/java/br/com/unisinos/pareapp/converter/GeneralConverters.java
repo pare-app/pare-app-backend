@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 
 @Configuration
@@ -66,8 +65,7 @@ public class GeneralConverters {
                 .from(ClassroomCreationDto::getName)
                     .into(ClassroomEntityDto::setName)
                 .from(ClassroomCreationDto::getOwner)
-                    .map(owner -> userFacade.find(owner.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(owner -> userFacade.find(owner.getId()))
                     .into(ClassroomEntityDto::setOwner)
                 .build();
     }
@@ -76,16 +74,13 @@ public class GeneralConverters {
     public Mapper<PairCreationDto, PairEntityDto> pairCreationConverter() {
         return Datus.forTypes(PairCreationDto.class, PairEntityDto.class).mutable(PairEntityDto::new)
                 .from(PairCreationDto::getClassroom)
-                    .map(classroom -> classroomFacade.find(classroom.getId())
-                        .orElseThrow(EntityNotFoundException::new))
+                    .map(classroom -> classroomFacade.find(classroom.getId()))
                     .into(PairEntityDto::setClassroom)
                 .from(PairCreationDto::getStudent1)
-                    .map(student1 -> userFacade.find(student1.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(student1 -> userFacade.find(student1.getId()))
                     .into(PairEntityDto::setStudent1)
                 .from(PairCreationDto::getStudent2)
-                    .map(student2 -> userFacade.find(student2.getId())
-                        .orElseThrow(EntityNotFoundException::new))
+                    .map(student2 -> userFacade.find(student2.getId()))
                     .into(PairEntityDto::setStudent2)
                 .build();
     }
@@ -97,8 +92,7 @@ public class GeneralConverters {
                     .into(ExerciseEntityDto::setDescription)
                 .from(ExerciseCreationDto::getClassroom)
                     .nullsafe()
-                    .given(Objects::nonNull, classroom -> Sets.newHashSet(classroomFacade.find(classroom.getId())
-                                .orElseThrow(EntityNotFoundException::new)))
+                    .given(Objects::nonNull, classroom -> Sets.newHashSet(classroomFacade.find(classroom.getId())))
                     .orElse(Sets.newHashSet())
                     .into(ExerciseEntityDto::setClassrooms)
                 .build();
@@ -109,8 +103,7 @@ public class GeneralConverters {
         return Datus.forTypes(QuestionCreationDto.class, QuestionEntityDto.class).mutable(QuestionEntityDto::new)
                 .from(QuestionCreationDto::getExercise)
                     .nullsafe()
-                    .given(Objects::nonNull, exercise -> Sets.newHashSet(exerciseFacade.find(exercise.getId())
-                            .orElseThrow(EntityNotFoundException::new)))
+                    .given(Objects::nonNull, exercise -> Sets.newHashSet(exerciseFacade.find(exercise.getId())))
                     .orElse(Sets.newHashSet())
                     .into(QuestionEntityDto::setExercises)
                 .from(QuestionCreationDto::getDescription)
@@ -124,8 +117,7 @@ public class GeneralConverters {
     public Mapper<SolutionCreationDto, SolutionEntityDto> solutionCreationConverter() {
         return Datus.forTypes(SolutionCreationDto.class, SolutionEntityDto.class).mutable(SolutionEntityDto::new)
                 .from(SolutionCreationDto::getQuestion)
-                    .map(question -> questionFacade.find(question.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(question -> questionFacade.find(question.getId()))
                     .into(SolutionEntityDto::setQuestion)
                 .from(SolutionCreationDto::getImage)
                     .into(SolutionEntityDto::setImage)
@@ -136,12 +128,10 @@ public class GeneralConverters {
     public Mapper<AnswerCreationDto, AnswerEntityDto> answerCreationConverter() {
         return Datus.forTypes(AnswerCreationDto.class, AnswerEntityDto.class).mutable(AnswerEntityDto::new)
                 .from(AnswerCreationDto::getQuestion)
-                    .map(question -> questionFacade.find(question.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(question -> questionFacade.find(question.getId()))
                     .into(AnswerEntityDto::setQuestion)
                 .from(AnswerCreationDto::getSession)
-                    .map(session -> sessionFacade.find(session.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(session -> sessionFacade.find(session.getId()))
                     .into(AnswerEntityDto::setSession)
                 .build();
     }
@@ -150,12 +140,10 @@ public class GeneralConverters {
     public Mapper<SessionCreationDto, SessionEntityDto> sessionCreationConverter() {
         return Datus.forTypes(SessionCreationDto.class, SessionEntityDto.class).mutable(SessionEntityDto::new)
                 .from(SessionCreationDto::getExercise)
-                    .map(exercise -> exerciseFacade.find(exercise.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(exercise -> exerciseFacade.find(exercise.getId()))
                     .into(SessionEntityDto::setExercise)
                 .from(SessionCreationDto::getPair)
-                    .map(pair -> pairFacade.find(pair.getId())
-                            .orElseThrow(EntityNotFoundException::new))
+                    .map(pair -> pairFacade.find(pair.getId()))
                     .into(SessionEntityDto::setPair)
                 .build();
     }

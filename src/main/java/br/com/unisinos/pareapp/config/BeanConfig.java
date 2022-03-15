@@ -1,6 +1,6 @@
 package br.com.unisinos.pareapp.config;
 
-import br.com.unisinos.pareapp.service.IUserService;
+import br.com.unisinos.pareapp.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @Configuration
 @RequiredArgsConstructor
 public class BeanConfig {
-    private final IUserService userService;
+    private final UserService userService;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

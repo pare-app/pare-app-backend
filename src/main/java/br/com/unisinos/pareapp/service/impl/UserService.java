@@ -1,12 +1,14 @@
 package br.com.unisinos.pareapp.service.impl;
 
 import br.com.unisinos.pareapp.dao.BaseDao;
-import br.com.unisinos.pareapp.dao.IUserDao;
+import br.com.unisinos.pareapp.dao.impl.UserDao;
 import br.com.unisinos.pareapp.model.entity.User;
+import br.com.unisinos.pareapp.repository.UserRepository;
 import br.com.unisinos.pareapp.security.service.impl.JwtTokenService;
-import br.com.unisinos.pareapp.service.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +16,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService extends AbstractEntityService<User> implements IUserService {
-    private final IUserDao userDao;
+public class UserService extends AbstractEntityService<User> implements UserDetailsService {
+    private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
 
-    @Override
     public Optional<User> findByUsername(final String username) {
-        return userDao.findByUsername(username);
+        return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
-    @Override
     public Optional<User> findByToken(String token) {
         return Optional
                 .of(jwtTokenService.verify(token))
@@ -37,7 +37,7 @@ public class UserService extends AbstractEntityService<User> implements IUserSer
     }
 
     @Override
-    protected BaseDao<User> getDao() {
-        return userDao;
+    protected JpaRepository<User, Integer> getRepository() {
+        return userRepository;
     }
 }

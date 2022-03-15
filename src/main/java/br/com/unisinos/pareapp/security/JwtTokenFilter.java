@@ -2,7 +2,7 @@ package br.com.unisinos.pareapp.security;
 
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.security.service.impl.JwtTokenService;
-import br.com.unisinos.pareapp.service.IUserService;
+import br.com.unisinos.pareapp.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
-    private final IUserService userService;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

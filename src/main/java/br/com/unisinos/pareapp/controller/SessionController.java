@@ -1,6 +1,7 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.facade.impl.SessionFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionCreationDto;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RestController
@@ -25,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "pare-app-api")
 public class SessionController extends AbstractController <SessionEntityDto, SessionCreationDto>{
-    private final EntityFacade<SessionEntityDto> sessionFacade;
+    private final SessionFacade sessionFacade;
     private final Mapper<SessionCreationDto, SessionEntityDto> sessionCreationConverter;
 
     @Override
@@ -88,6 +91,28 @@ public class SessionController extends AbstractController <SessionEntityDto, Ses
     public ResponseEntity<SessionEntityDto> get(
             @PathVariable(name = "id") Integer id) {
         return super.get(id);
+    }
+
+    @Operation(summary = "Retorna Sessão por chave única")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sessão retornada com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SessionEntityDto.class)) })
+    })
+    @GetMapping("/unique")
+    public ResponseEntity<SessionEntityDto> get(
+            @RequestParam("exerciseId") Integer exerciseId,
+            @RequestParam("pairId") Integer pairId) {
+        SessionEntityDto found;
+        try {
+            found = sessionFacade.findByExerciseAndPair(exerciseId, pairId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().body(found);
     }
 
     @Operation(summary = "Retorna todas as Sessões")

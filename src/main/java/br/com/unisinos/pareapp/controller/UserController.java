@@ -1,6 +1,7 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.facade.impl.UserFacade;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.ConnectionDto;
 import br.com.unisinos.pareapp.model.dto.user.LoginDto;
@@ -16,9 +17,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +35,7 @@ import java.util.Optional;
 public class UserController extends AbstractController<UserEntityDto,RegisterDto> {
 
     private final AuthenticationService authentication;
-    private final EntityFacade<UserEntityDto> userFacade;
+    private final UserFacade userFacade;
     private final Mapper<LoginDto, UserEntityDto> userLoginConverter;
     private final Mapper<RegisterDto, UserEntityDto> userRegisterConverter;
 
@@ -56,9 +59,9 @@ public class UserController extends AbstractController<UserEntityDto,RegisterDto
     @PostMapping("/register")
     public ResponseEntity<ConnectionDto> register(
             @RequestBody RegisterDto registerDto) {
-        UserEntityDto userDto = userRegisterConverter.convert(registerDto);
-        Optional<UserEntityDto> result;
+        UserEntityDto result;
         try {
+            UserEntityDto userDto = userRegisterConverter.convert(registerDto);
             result = userFacade.save(userDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -75,8 +78,17 @@ public class UserController extends AbstractController<UserEntityDto,RegisterDto
     @PostMapping("/login")
     public ResponseEntity<ConnectionDto> login(
             @RequestBody LoginDto loginDto) {
-        UserEntityDto userDto = userLoginConverter.convert(loginDto);
-        Optional<UserEntityDto> persisted = userFacade.find(userDto);
+
+        UserEntityDto persisted;
+        try {
+            UserEntityDto userDto = userLoginConverter.convert(loginDto);
+            persisted = userFacade.findByUsername(userDto.getUsername());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
         return doLogin(persisted,loginDto.getPassword());
     }
 
@@ -87,24 +99,16 @@ public class UserController extends AbstractController<UserEntityDto,RegisterDto
                             schema = @Schema(implementation = UserEntityDto.class)) })
     })
     @SecurityRequirement(name = "pare-app-api")
+    @Override
     @GetMapping("{id}")
     public ResponseEntity<UserEntityDto> get(
             @PathVariable(name = "id") Integer id) {
-        Optional<UserEntityDto> foundUser = userFacade.find(id);
-        if(foundUser.isPresent()) {
-            return foundUser
-                    .map(found -> ResponseEntity.ok().body(found))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return super.get(id);
     }
 
-    private ResponseEntity<ConnectionDto> doLogin(Optional<UserEntityDto> userDto, String password) {
-        return userDto.map(dto -> {
-            dto.setPassword(password);
-            return authenticate(dto);
-        }).orElseGet(() -> ResponseEntity.badRequest().build());
+    private ResponseEntity<ConnectionDto> doLogin(UserEntityDto userDto, String password) {
+            userDto.setPassword(password);
+            return authenticate(userDto);
     }
 
     private ResponseEntity<ConnectionDto> authenticate(UserEntityDto userDto) {

@@ -3,71 +3,71 @@ package br.com.unisinos.pareapp.controller;
 import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
 import com.github.roookeee.datus.api.Mapper;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.RollbackException;
 import java.util.List;
-import java.util.Optional;
 
-public abstract class AbstractController<T extends BaseEntityDto,C> extends BaseController {
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400", description = "Parâmetros inválidos",
+                content = @Content),
+        @ApiResponse(responseCode = "401", description = "Não autorizado",
+                content = @Content),
+        @ApiResponse(responseCode = "404", description = "Referência não encontrada",
+                content = @Content),
+        @ApiResponse(responseCode = "409", description = "Violação de restrição de unicidade de dados",
+                content = @Content),
+        @ApiResponse(responseCode = "422", description = "Violação de restrição de integridade de dados",
+                content = @Content),
+        @ApiResponse(responseCode = "500", description = "Erro inesperado",
+                content = @Content)
+})
+
+public abstract class AbstractController<T extends BaseEntityDto,C> {
     protected abstract EntityFacade<T> getFacade();
     protected abstract Mapper<C, T> getCreationConverter();
 
     public ResponseEntity<T> create(C creationDto) {
-        T entityDto;
+        T result;
         try {
-            entityDto = getCreationConverter().convert(creationDto);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }
-
-        Optional<T> result;
-        try {
+            T entityDto = getCreationConverter().convert(creationDto);
             result = getFacade().save(entityDto);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.unprocessableEntity().build();
         } catch (RollbackException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-        return result.map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
-                .orElseGet(() -> ResponseEntity.internalServerError().build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     public ResponseEntity<T> edit(T entityDto) {
-        Optional<T> found;
+        T persisted;
         try {
-            found = getFacade().find(entityDto);
+            T found = getFacade().find(entityDto.getId());
+            persisted = getFacade().save(found);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.unprocessableEntity().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (RollbackException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
 
-        if(found.isPresent()) {
-            Optional<T> optional;
-            try {
-                optional = getFacade().save(entityDto);
-            } catch (EntityNotFoundException e) {
-                return ResponseEntity.notFound().build();
-            } catch (RollbackException e) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            } catch (Exception e){
-                return ResponseEntity.badRequest().build();
-            }
-            return optional
-                    .map(persisted -> ResponseEntity.ok().body(persisted))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(persisted);
     }
 
     public ResponseEntity<T> get(Integer id) {
-        Optional<T> found;
+        T found;
         try {
             found = getFacade().find(id);
         } catch (EntityNotFoundException e) {
@@ -76,17 +76,11 @@ public abstract class AbstractController<T extends BaseEntityDto,C> extends Base
             return ResponseEntity.badRequest().build();
         }
 
-        if(found.isPresent()) {
-            return found
-                    .map(entity -> ResponseEntity.ok().body(entity))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(found);
     }
 
     public ResponseEntity<List<T>> get() {
-        Optional<List<T>> found;
+        List<T> found;
         try {
             found = getFacade().findAll();
         } catch (EntityNotFoundException e) {
@@ -95,39 +89,28 @@ public abstract class AbstractController<T extends BaseEntityDto,C> extends Base
             return ResponseEntity.badRequest().build();
         }
 
-        if(found.isPresent()) {
-            return found
-                    .map(entities-> ResponseEntity.ok().body(entities))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(found);
     }
 
     public ResponseEntity<T> remove(Integer id) {
-        Optional<T> found;
+        T found;
         try {
             found = getFacade().find(id);
+            getFacade().remove(found.getId());
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.unprocessableEntity().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
 
-        if (found.isPresent()) {
-            Optional<T> optional = getFacade().remove(id);
-
-            return optional
-                    .map(this::verifyRemoval)
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
-        }
-
-        return ResponseEntity.notFound().build();
+        return verifyRemoval(id);
     }
 
-    private ResponseEntity<T> verifyRemoval(T removed) {
+    private ResponseEntity<T> verifyRemoval(Integer id) {
         try {
-            getFacade().find(removed);
+            getFacade().find(id);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.ok().build();
         } catch (Exception e) {

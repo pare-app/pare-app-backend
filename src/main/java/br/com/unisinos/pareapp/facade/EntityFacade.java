@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntityFacade<T extends BaseEntityDto> {
-    Optional<T> save(T dto);
-    Optional<T> find(T dto);
-    Optional<T> find(Integer id);
-    Optional<List<T>> findAll();
-    Optional<T> remove(Integer id);
+    T save(T dto);
+    T find(Integer id);
+    List<T> findAll();
+    void remove(Integer id);
 }
