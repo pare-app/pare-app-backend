@@ -1,7 +1,5 @@
 package br.com.unisinos.pareapp.service.impl;
 
-import br.com.unisinos.pareapp.dao.BaseDao;
-import br.com.unisinos.pareapp.dao.impl.UserDao;
 import br.com.unisinos.pareapp.model.entity.User;
 import br.com.unisinos.pareapp.repository.UserRepository;
 import br.com.unisinos.pareapp.security.service.impl.JwtTokenService;

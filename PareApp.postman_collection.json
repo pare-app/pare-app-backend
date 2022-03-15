@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\r\n      \"name\": \"carol\",\r\n      \"username\": \"carol@mail.com\",\r\n      \"password\": \"carol\"      \r\n    }",
+							"raw": "    {\r\n      \"name\": \"oi\",\r\n      \"username\": \"oi@mail.com\",\r\n      \"password\": \"oi\"      \r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,7 +194,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\r\n      \"name\": \"turma1\",\r\n      \"owner\":{ \r\n          \"id\": 1\r\n      }\r\n    }",
+							"raw": "    {\r\n      \"name\": \"turma2\",\r\n      \"owner\":{ \r\n          \"id\": 1\r\n      }\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -233,7 +233,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 6,\r\n    \"name\": \"turma1\",\r\n    \"owner\": {\"id\": 1},\r\n    \"students\": [\r\n        {\"id\": 2},\r\n        {\"id\": 3},\r\n        {\"id\": 4},\r\n        {\"id\": 5}\r\n    ]\r\n}",
+							"raw": "{\r\n    \"id\": 6,\r\n    \"name\": \"turma1\",\r\n    \"owner\": {\"id\": 1},\r\n    \"students\": [\r\n        {\"id\": 2},\r\n        {\"id\": 3},\r\n        {\"id\": 4},\r\n        {\"id\": 5},\r\n        {\"id\": 38}\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -407,7 +407,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/pair/7",
+							"raw": "http://localhost:8080/pair/8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -415,7 +415,7 @@
 							"port": "8080",
 							"path": [
 								"pair",
-								"7"
+								"8"
 							]
 						}
 					},
@@ -1346,7 +1346,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "  {\r\n  \"exercise\": {\r\n    \"id\": 9\r\n  },\r\n  \"pair\": {\r\n    \"id\": 8\r\n  }\r\n}",
+							"raw": "  {\r\n  \"exercise\": {\r\n    \"id\": 9\r\n  },\r\n  \"pair\": {\r\n    \"id\":7\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1524,6 +1524,58 @@
 							"port": "8080",
 							"path": [
 								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unique",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/session/unique?exerciseId=9&pairId=8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"session",
+								"unique"
+							],
+							"query": [
+								{
+									"key": "exerciseId",
+									"value": "9"
+								},
+								{
+									"key": "pairId",
+									"value": "8"
+								}
 							]
 						}
 					},
