@@ -1,9 +1,8 @@
-package br.com.unisinos.pareapp.model.dto.question;
+package br.com.unisinos.pareapp.model.dto.exercisequestion;
 
 import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
-import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
-import br.com.unisinos.pareapp.model.dto.solution.SolutionEntityDto;
+import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,17 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Set;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QuestionEntityDto extends BaseEntityDto {
-    private String description;
-    private byte[] image;
-    private Set<ExerciseQuestionEntityDto> exercises;
-    private SolutionEntityDto solution;
+public class ExerciseQuestionEntityDto extends BaseEntityDto {
+    private ExerciseEntityDto exercise;
+    private QuestionEntityDto question;
+    private Integer order;
 }

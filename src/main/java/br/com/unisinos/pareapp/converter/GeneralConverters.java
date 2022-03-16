@@ -1,12 +1,15 @@
 package br.com.unisinos.pareapp.converter;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.facade.impl.ExerciseQuestionFacade;
 import br.com.unisinos.pareapp.model.dto.answer.AnswerCreationDto;
 import br.com.unisinos.pareapp.model.dto.answer.AnswerEntityDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomCreationDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseCreationDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
+import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionCreationDto;
+import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairCreationDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionCreationDto;
@@ -36,6 +39,7 @@ public class GeneralConverters {
     private final EntityFacade<ExerciseEntityDto> exerciseFacade;
     private final EntityFacade<QuestionEntityDto> questionFacade;
     private final EntityFacade<SessionEntityDto> sessionFacade;
+    private final EntityFacade<ExerciseQuestionEntityDto> exerciseQuestionFacade;
 
     @Bean
     public Mapper<LoginDto, UserEntityDto> userLoginConverter() {
@@ -101,15 +105,24 @@ public class GeneralConverters {
     @Bean
     public Mapper<QuestionCreationDto, QuestionEntityDto> questionCreationConverter() {
         return Datus.forTypes(QuestionCreationDto.class, QuestionEntityDto.class).mutable(QuestionEntityDto::new)
-                .from(QuestionCreationDto::getExercise)
-                    .nullsafe()
-                    .given(Objects::nonNull, exercise -> Sets.newHashSet(exerciseFacade.find(exercise.getId())))
-                    .orElse(Sets.newHashSet())
-                    .into(QuestionEntityDto::setExercises)
                 .from(QuestionCreationDto::getDescription)
                     .into(QuestionEntityDto::setDescription)
                 .from(QuestionCreationDto::getImage)
                     .into(QuestionEntityDto::setImage)
+                .build();
+    }
+
+    @Bean
+    public Mapper<ExerciseQuestionCreationDto, ExerciseQuestionEntityDto> exerciseQuestionCreationConverter() {
+        return Datus.forTypes(ExerciseQuestionCreationDto.class, ExerciseQuestionEntityDto.class).mutable(ExerciseQuestionEntityDto::new)
+                .from(ExerciseQuestionCreationDto::getExercise)
+                    .map(exercise -> exerciseFacade.find(exercise.getId()))
+                    .into(ExerciseQuestionEntityDto::setExercise)
+                .from(ExerciseQuestionCreationDto::getQuestion)
+                    .map(question -> questionFacade.find(question.getId()))
+                    .into(ExerciseQuestionEntityDto::setQuestion)
+                .from(ExerciseQuestionCreationDto::getOrder)
+                .into(ExerciseQuestionEntityDto::setOrder)
                 .build();
     }
 

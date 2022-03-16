@@ -4,6 +4,7 @@ import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
 import br.com.unisinos.pareapp.model.dto.answer.AnswerEntityDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
+import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionEntityDto;
@@ -58,7 +59,7 @@ public class StandardConverters {
         return Datus.forTypes(Question.class, QuestionEntityDto.class).mutable(QuestionEntityDto::new)
                 .process((question, questionEntityDto) ->  questionEntityDto = questionLoopConverter().convert(question))
                 .from(Question::getExercises)
-                    .given(Objects::nonNull, exercises -> Sets.newHashSet(exerciseLoopConverter().convert(exercises)))
+                    .given(Objects::nonNull, exercises -> Sets.newHashSet(exerciseQuestionLoopConverter().convert(exercises)))
                     .orElse(Sets.newHashSet())
                     .into(QuestionEntityDto::setExercises)
                 .from(Question::getSolution)
@@ -68,12 +69,34 @@ public class StandardConverters {
                 .build();
     }
 
+    @Bean
+    public Mapper<ExerciseQuestion, ExerciseQuestionEntityDto> exerciseQuestionStandardConverter() {
+        return exerciseQuestionLoopConverter();
+    }
+
+    public Mapper<ExerciseQuestion, ExerciseQuestionEntityDto> exerciseQuestionLoopConverter() {
+        return Datus.forTypes(ExerciseQuestion.class, ExerciseQuestionEntityDto.class).mutable(ExerciseQuestionEntityDto::new)
+                .from(BaseEntity::getId)
+                    .into(BaseEntityDto::setId)
+                .from(ExerciseQuestion::getExercise)
+                    .map(exercise -> exerciseLoopConverter().convert(exercise))
+                    .into(ExerciseQuestionEntityDto::setExercise)
+                .from(ExerciseQuestion::getQuestion)
+                    .map(question -> questionLoopConverter().convert(question))
+                    .into(ExerciseQuestionEntityDto::setQuestion)
+                .build();
+    }
+
+
     public Mapper<Exercise, ExerciseEntityDto> exerciseLoopConverter() {
         return Datus.forTypes(Exercise.class, ExerciseEntityDto.class).mutable(ExerciseEntityDto::new)
                 .from(BaseEntity::getId)
                     .into(BaseEntityDto::setId)
                 .from(Exercise::getDescription)
                     .into(ExerciseEntityDto::setDescription)
+                .process((exercise, exerciseEntityDto) -> {
+                        exerciseEntityDto.setHasQuestions(!exercise.getQuestions().isEmpty());
+                        return exerciseEntityDto;})
                 .build();
     }
 
@@ -86,7 +109,7 @@ public class StandardConverters {
                     .orElse(Sets.newHashSet())
                     .into(ExerciseEntityDto::setClassrooms)
                 .from(Exercise::getQuestions)
-                    .given(Objects::nonNull, questions -> Sets.newHashSet(questionLoopConverter().convert(questions)))
+                    .given(Objects::nonNull, questions -> Sets.newHashSet(exerciseQuestionLoopConverter().convert(questions)))
                     .orElse(Sets.newHashSet())
                     .into(ExerciseEntityDto::setQuestions)
                 .from(Exercise::getSessions)

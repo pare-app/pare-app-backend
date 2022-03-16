@@ -2,6 +2,7 @@ package br.com.unisinos.pareapp.model.dto.exercise;
 
 import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
+import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionEntityDto;
 import br.com.unisinos.pareapp.model.entity.Question;
@@ -23,7 +24,8 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExerciseEntityDto extends BaseEntityDto {
     private Set<ClassroomEntityDto> classrooms;
-    private Set<QuestionEntityDto> questions;
+    private Set<ExerciseQuestionEntityDto> questions;
     private Set<SessionEntityDto> sessions;
     private String description;
+    private Boolean hasQuestions;
 }

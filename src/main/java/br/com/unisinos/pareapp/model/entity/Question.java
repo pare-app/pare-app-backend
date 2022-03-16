@@ -17,8 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Question extends BaseEntity {
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<Exercise> exercises;
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<ExerciseQuestion> exercises;
 
     @NotNull(message = "empty image")
     private byte[] image;

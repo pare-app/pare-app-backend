@@ -3,6 +3,7 @@ package br.com.unisinos.pareapp.converter;
 import br.com.unisinos.pareapp.model.dto.answer.AnswerEntityDto;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
+import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.pair.PairEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionEntityDto;
@@ -30,6 +31,7 @@ public class InverseConverters {
     private final EntityService<Classroom> classroomService;
     private final EntityService<Pair> pairService;
     private final EntityService<Exercise> exerciseService;
+    private final EntityService<ExerciseQuestion> exerciseQuestionService;
     private final EntityService<Session> sessionService;
     private final EntityService<Question> questionService;
     private final EntityService<Solution> solutionService;
@@ -87,11 +89,31 @@ public class InverseConverters {
                     .into(Question::setSolution)
                 .from(QuestionEntityDto::getExercises)
                     .given(Objects::nonNull, exercises -> exercises.stream()
-                            .map(exercise -> exerciseService.find(exercise.getId())
+                            .map(exercise -> exerciseQuestionService.find(exercise.getId())
                                     .orElseThrow(EntityNotFoundException::new))
                             .collect(Collectors.toSet()))
                     .orElse(Sets.newHashSet())
                     .into(Question::setExercises)
+                .build();
+    }
+
+    @Bean
+    public Mapper<ExerciseQuestionEntityDto, ExerciseQuestion> exerciseQuestionInverseConverter() {
+        return Datus.forTypes(ExerciseQuestionEntityDto.class, ExerciseQuestion.class).mutable(ExerciseQuestion::new)
+                .from(ExerciseQuestionEntityDto::getId)
+                    .into(ExerciseQuestion::setId)
+                .from(ExerciseQuestionEntityDto::getOrder)
+                    .into(ExerciseQuestion::setOrder)
+                .from(ExerciseQuestionEntityDto::getExercise)
+                    .map(exercise ->
+                            exerciseService.find(exercise.getId())
+                                    .orElseThrow(EntityNotFoundException::new))
+                    .into(ExerciseQuestion::setExercise)
+                .from(ExerciseQuestionEntityDto::getQuestion)
+                    .map(question ->
+                            questionService.find(question.getId())
+                                    .orElseThrow(EntityNotFoundException::new))
+                    .into(ExerciseQuestion::setQuestion)
                 .build();
     }
 
@@ -189,7 +211,7 @@ public class InverseConverters {
                     .into(Exercise::setClassrooms)
                 .from(ExerciseEntityDto::getQuestions)
                     .given(Objects::nonNull, questions -> questions.stream()
-                            .map(question -> questionService.find(question.getId())
+                            .map(question -> exerciseQuestionService.find(question.getId())
                                     .orElseThrow(EntityNotFoundException::new))
                             .collect(Collectors.toSet()))
                     .orElse(Sets.newHashSet())

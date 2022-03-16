@@ -51,8 +51,7 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
     public ResponseEntity<T> edit(T entityDto) {
         T persisted;
         try {
-            T found = getFacade().find(entityDto.getId());
-            persisted = getFacade().save(found);
+            persisted = getFacade().save(entityDto);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.unprocessableEntity().build();
         } catch (EntityNotFoundException e) {
@@ -108,7 +107,7 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
         return verifyRemoval(id);
     }
 
-    private ResponseEntity<T> verifyRemoval(Integer id) {
+    protected ResponseEntity<T> verifyRemoval(Integer id) {
         try {
             getFacade().find(id);
         } catch (EntityNotFoundException e) {
