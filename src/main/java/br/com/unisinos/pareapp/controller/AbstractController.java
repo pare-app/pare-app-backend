@@ -61,6 +61,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
             return ResponseEntity.notFound().build();
         } catch (RollbackException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
@@ -74,6 +76,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
             found = getFacade().find(id);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -87,6 +91,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
             found = getFacade().findAll();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -103,6 +109,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
             return ResponseEntity.unprocessableEntity().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
