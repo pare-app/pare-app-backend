@@ -43,7 +43,8 @@ public class JwtTokenService implements Clock, TokenService {
                 .signWith(HS256, secretKey)
                 .setExpiration(
                         Date.from(ZonedDateTime.now()
-                            .plusMinutes(tokenExpirationMinutes)
+//                            .plusMinutes(tokenExpirationMinutes)
+                            .plusHours(3)
                             .toInstant()))
                 .compressWith(COMPRESSION_CODEC)
                 .compact();
