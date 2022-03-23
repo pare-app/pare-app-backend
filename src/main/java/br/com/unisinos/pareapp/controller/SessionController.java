@@ -1,6 +1,8 @@
 package br.com.unisinos.pareapp.controller;
 
 import br.com.unisinos.pareapp.facade.EntityFacade;
+import br.com.unisinos.pareapp.facade.impl.ExerciseFacade;
+import br.com.unisinos.pareapp.facade.impl.PairFacade;
 import br.com.unisinos.pareapp.facade.impl.SessionFacade;
 import br.com.unisinos.pareapp.model.dto.classroom.ClassroomEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
@@ -16,7 +18,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -105,9 +109,9 @@ public class SessionController extends AbstractController <SessionEntityDto, Ses
             @RequestParam("pairId") Integer pairId) {
         SessionEntityDto found;
         try {
-            found = sessionFacade.findByExerciseAndPair(exerciseId, pairId);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            found = sessionFacade.getByExerciseAndPair(exerciseId, pairId);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

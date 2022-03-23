@@ -14,4 +14,14 @@ public class QuestionService extends AbstractEntityService<Question> {
     protected JpaRepository<Question, Integer> getRepository() {
         return questionRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(Question entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(Question entity) {
+
+    }
 }

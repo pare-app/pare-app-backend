@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.RollbackException;
@@ -42,6 +43,8 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
             return ResponseEntity.unprocessableEntity().build();
         } catch (RollbackException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

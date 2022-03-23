@@ -14,24 +14,31 @@ import java.util.Optional;
 public abstract class AbstractEntityService<T extends BaseEntity> implements EntityService<T> {
 
     protected abstract JpaRepository<T, Integer> getRepository();
+    protected abstract void verifyAccessPermission(T entity);
+    protected abstract void validateParameters(T entity);
 
     @Override
     public T save(T entity) {
+        verifyAccessPermission(entity);
+        validateParameters(entity);
         return getRepository().save(entity);
     }
 
     @Override
     public Optional<T> find(Integer id) {
-        return Optional.ofNullable(getRepository().getById(id));
+        T entity = getRepository().getById(id);
+        verifyAccessPermission(entity);
+        return Optional.of(entity);
     }
 
     @Override
     public Optional<List<T>> findAll() {
-        return Optional.ofNullable(getRepository().findAll());
+        return Optional.of(getRepository().findAll());
     }
 
     @Override
     public void remove(Integer id) {
+        verifyAccessPermission(getRepository().getById(id));
         getRepository().deleteById(id);
     }
 }

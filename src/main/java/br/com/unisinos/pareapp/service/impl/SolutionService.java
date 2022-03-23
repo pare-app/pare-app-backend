@@ -14,4 +14,14 @@ public class SolutionService extends AbstractEntityService<Solution> {
     protected JpaRepository<Solution, Integer> getRepository() {
         return solutionRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(Solution entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(Solution entity) {
+
+    }
 }

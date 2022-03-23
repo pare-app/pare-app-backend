@@ -14,4 +14,14 @@ public class ClassroomService extends AbstractEntityService<Classroom> {
     protected JpaRepository<Classroom, Integer> getRepository() {
         return classroomRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(Classroom entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(Classroom entity) {
+
+    }
 }

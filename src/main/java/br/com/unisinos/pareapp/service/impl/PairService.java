@@ -14,4 +14,14 @@ public class PairService extends AbstractEntityService<Pair> {
     protected JpaRepository<Pair, Integer> getRepository() {
         return pairRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(Pair entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(Pair entity) {
+
+    }
 }

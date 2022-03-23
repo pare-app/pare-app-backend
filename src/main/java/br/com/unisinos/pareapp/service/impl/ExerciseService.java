@@ -14,4 +14,14 @@ public class ExerciseService extends AbstractEntityService<Exercise> {
     protected JpaRepository<Exercise, Integer> getRepository() {
         return exerciseRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(Exercise entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(Exercise entity) {
+
+    }
 }

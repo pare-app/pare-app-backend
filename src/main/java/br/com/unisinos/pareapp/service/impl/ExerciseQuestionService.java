@@ -20,6 +20,16 @@ public class ExerciseQuestionService extends AbstractEntityService<ExerciseQuest
         return exerciseQuestionRepository;
     }
 
+    @Override
+    protected void verifyAccessPermission(ExerciseQuestion entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(ExerciseQuestion entity) {
+
+    }
+
     public Optional<ExerciseQuestion> findByExerciseAndQuestion(Integer exerciseId, Integer questionId){
         return Optional.of(exerciseQuestionRepository.findByExerciseAndQuestion(exerciseId,questionId));
     }

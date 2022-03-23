@@ -38,4 +38,14 @@ public class UserService extends AbstractEntityService<User> implements UserDeta
     protected JpaRepository<User, Integer> getRepository() {
         return userRepository;
     }
+
+    @Override
+    protected void verifyAccessPermission(User entity) {
+
+    }
+
+    @Override
+    protected void validateParameters(User entity) {
+
+    }
 }

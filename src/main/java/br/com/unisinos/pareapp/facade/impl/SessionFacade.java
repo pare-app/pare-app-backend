@@ -1,5 +1,7 @@
 package br.com.unisinos.pareapp.facade.impl;
 
+import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
+import br.com.unisinos.pareapp.model.dto.session.SessionCreationDto;
 import br.com.unisinos.pareapp.model.dto.session.SessionEntityDto;
 import br.com.unisinos.pareapp.model.dto.user.UserEntityDto;
 import br.com.unisinos.pareapp.model.entity.Session;
@@ -7,6 +9,7 @@ import br.com.unisinos.pareapp.service.EntityService;
 import br.com.unisinos.pareapp.service.impl.SessionService;
 import com.github.roookeee.datus.api.Mapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,9 +36,7 @@ public class SessionFacade extends AbstractEntityFacade<SessionEntityDto, Sessio
         return inverseConverter;
     }
 
-    public SessionEntityDto findByExerciseAndPair(Integer exerciseId,Integer pairId){
-        return standardConverter.convert(
-                service.findByExerciseAndPair(exerciseId,pairId)
-                        .orElseThrow(EntityNotFoundException::new));
+    public SessionEntityDto getByExerciseAndPair(Integer exerciseId,Integer pairId){
+        return standardConverter.convert(service.getByExerciseAndPair(exerciseId, pairId));
     }
 }
