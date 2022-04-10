@@ -69,6 +69,19 @@ public class UserController extends AbstractController<UserEntityDto,RegisterDto
         return doLogin(result, registerDto.getPassword());
     }
 
+    @SecurityRequirement(name = "pare-app-api")
+    @Operation(summary = "Cria lista de usuários")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários criados com sucesso, token recebido",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserEntityDto.class)))})
+    })
+    @PostMapping("/registerAll")
+    public ResponseEntity<List<UserEntityDto>> registerAll(
+            @RequestBody List<RegisterDto> registerDtos) {
+        return super.createAll(registerDtos);
+    }
+
     @Operation(summary = "Autentica usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login efetuado com sucesso, token recebido",

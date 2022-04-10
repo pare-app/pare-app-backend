@@ -49,6 +49,19 @@ public class PairController extends AbstractController<PairEntityDto,PairCreatio
         return super.create(pairCreationDto);
     }
 
+    @Operation(summary = "Cria lista de Pares")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pares criados com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PairEntityDto.class)))})
+    })
+    @PostMapping("createAll")
+    @Override
+    public ResponseEntity<List<PairEntityDto>> createAll(
+            @RequestBody List<PairCreationDto> pairCreationDtos) {
+        return super.createAll(pairCreationDtos);
+    }
+
 
     @Override
     @Operation(summary = "Remove Par")

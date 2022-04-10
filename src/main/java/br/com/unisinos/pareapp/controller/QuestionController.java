@@ -53,6 +53,19 @@ public class QuestionController extends AbstractController<QuestionEntityDto, Qu
     }
 
     @Override
+    @Operation(summary = "Cria lista de Questões")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Questões criadas com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = QuestionEntityDto.class)))})
+    })
+    @PostMapping("createAll")
+    public ResponseEntity<List<QuestionEntityDto>> createAll(
+            @RequestBody List<QuestionCreationDto> creationDtos) {
+        return super.createAll(creationDtos);
+    }
+
+    @Override
     @Operation(summary = "Edita Questão")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Questão editada com sucesso",

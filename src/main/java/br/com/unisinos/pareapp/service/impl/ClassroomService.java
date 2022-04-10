@@ -21,7 +21,7 @@ public class ClassroomService extends AbstractEntityService<Classroom> {
     @Override
     protected void verifyAccessPermission(Classroom entity) {
         User loggedUser = httpSessionService.getLoggedUser();
-        if(!entity.getStudents().contains(loggedUser))
+        if(!entity.getStudents().contains(loggedUser) && !entity.getOwner().equals(loggedUser))
             throw new AccessDeniedException("Access denied");
     }
 

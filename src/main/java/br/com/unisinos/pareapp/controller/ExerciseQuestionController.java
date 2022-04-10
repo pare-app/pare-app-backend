@@ -3,6 +3,7 @@ package br.com.unisinos.pareapp.controller;
 import br.com.unisinos.pareapp.facade.EntityFacade;
 import br.com.unisinos.pareapp.facade.impl.ExerciseQuestionFacade;
 import br.com.unisinos.pareapp.model.dto.BaseEntityDto;
+import br.com.unisinos.pareapp.model.dto.exercise.ExerciseEntityDto;
 import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionCreationDto;
 import br.com.unisinos.pareapp.model.dto.exercisequestion.ExerciseQuestionEntityDto;
 import br.com.unisinos.pareapp.model.dto.question.QuestionEntityDto;
@@ -40,20 +41,15 @@ public class ExerciseQuestionController extends AbstractController<ExerciseQuest
         return exerciseQuestionCreationConverter;
     }
 
-    @Operation(summary = "Vincula questões a exercícios")
+    @Operation(summary = "Vincula questão a exercício")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Questões e exercícios vinculadoscom sucesso",
+            @ApiResponse(responseCode = "201", description = "Questão e exercício vinculados com sucesso",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExerciseQuestionEntityDto.class)) })
     })
     @PostMapping("add-question")
     public ResponseEntity<ExerciseQuestionEntityDto> create(
-            @RequestParam(name = "exerciseId") Integer exerciseId,
-            @RequestParam(name = "questionId") Integer questionId) {
-        ExerciseQuestionCreationDto creationDto = ExerciseQuestionCreationDto.builder()
-                .exercise(new BaseEntityDto(exerciseId))
-                .question(new BaseEntityDto(questionId))
-                .build();
+            @RequestBody ExerciseQuestionCreationDto creationDto) {
         return super.create(creationDto);
     }
 

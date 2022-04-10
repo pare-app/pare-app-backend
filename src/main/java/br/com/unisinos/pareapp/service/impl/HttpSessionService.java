@@ -1,5 +1,6 @@
 package br.com.unisinos.pareapp.service.impl;
 
+import br.com.unisinos.pareapp.enums.UserAction;
 import br.com.unisinos.pareapp.model.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 public class HttpSessionService {
 
     public static final String CONNECTED_USER = "user";
+    protected static final String USER_ACTION = "userAction";
 
     public Object getAttribute(String name) {
         return getSession().getAttribute(name);
@@ -32,5 +34,13 @@ public class HttpSessionService {
 
     public void setLoggedUser(User user) {
         setAttribute(CONNECTED_USER, user);
+    }
+
+    public void setUserAction(UserAction userAction) {
+        setAttribute(USER_ACTION, userAction);
+    }
+
+    public UserAction getUserAction() {
+        return (UserAction) getAttribute(USER_ACTION);
     }
 }

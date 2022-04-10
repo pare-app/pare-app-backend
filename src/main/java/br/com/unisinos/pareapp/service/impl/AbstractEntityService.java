@@ -25,6 +25,15 @@ public abstract class AbstractEntityService<T extends BaseEntity> implements Ent
     }
 
     @Override
+    public List<T> save(List<T> entities) {
+        entities.forEach(entity -> {
+            verifyAccessPermission(entity);
+            validateParameters(entity);
+        });
+        return getRepository().saveAll(entities);
+    }
+
+    @Override
     public Optional<T> find(Integer id) {
         T entity = getRepository().getById(id);
         verifyAccessPermission(entity);

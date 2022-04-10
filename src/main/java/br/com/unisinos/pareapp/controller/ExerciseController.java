@@ -38,7 +38,7 @@ public class ExerciseController extends AbstractController<ExerciseEntityDto, Ex
 
     @Operation(summary = "Cria Exercício")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Exercício criada com sucesso",
+            @ApiResponse(responseCode = "201", description = "Exercício criados com sucesso",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExerciseEntityDto.class)) })
     })
@@ -47,6 +47,19 @@ public class ExerciseController extends AbstractController<ExerciseEntityDto, Ex
     public ResponseEntity<ExerciseEntityDto> create(
             @RequestBody ExerciseCreationDto creationDto) {
         return super.create(creationDto);
+    }
+
+    @Operation(summary = "Cria lista de Exercícios")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Exercícios criados com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ExerciseEntityDto.class)))})
+    })
+    @PostMapping("createAll")
+    @Override
+    public ResponseEntity<List<ExerciseEntityDto>> createAll(
+            @RequestBody List<ExerciseCreationDto> creationDtos) {
+        return super.createAll(creationDtos);
     }
 
     @Override

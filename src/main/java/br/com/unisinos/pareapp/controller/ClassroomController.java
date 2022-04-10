@@ -49,6 +49,19 @@ public class ClassroomController extends AbstractController<ClassroomEntityDto,C
         return super.create(classroomCreationDto);
     }
 
+    @Operation(summary = "Cria lista de turmas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Turmas criadas com sucesso",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ClassroomEntityDto.class)))})
+    })
+    @PostMapping("createAll")
+    @Override
+    public ResponseEntity<List<ClassroomEntityDto>> createAll(
+            @RequestBody List<ClassroomCreationDto> classroomCreationDtos) {
+        return super.createAll(classroomCreationDtos);
+    }
+
     @Override
     @Operation(summary = "Edita Turma")
     @ApiResponses(value = {

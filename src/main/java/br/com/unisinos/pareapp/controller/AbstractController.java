@@ -51,6 +51,23 @@ public abstract class AbstractController<T extends BaseEntityDto,C> {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    public ResponseEntity<List<T>> createAll(List<C> creationDto) {
+        List<T> result;
+        try {
+            List<T> entityDtoList = getCreationConverter().convert(creationDto);
+            result = getFacade().save(entityDtoList);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.unprocessableEntity().build();
+        } catch (RollbackException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
     public ResponseEntity<T> edit(T entityDto) {
         T persisted;
         try {

@@ -22,7 +22,7 @@ public class Classroom extends BaseEntity {
     private String name;
 
     @NotNull(message = "empty owner")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
     private User owner;
 
