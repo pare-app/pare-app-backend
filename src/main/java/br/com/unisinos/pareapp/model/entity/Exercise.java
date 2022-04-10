@@ -16,13 +16,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Exercise extends BaseEntity{
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Classroom> classrooms;
 
-    @OneToMany(mappedBy = "exercise", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ExerciseQuestion> questions;
 
-    @OneToMany(mappedBy = "exercise",fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "exercise",fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Session> sessions;
 
     private String description;

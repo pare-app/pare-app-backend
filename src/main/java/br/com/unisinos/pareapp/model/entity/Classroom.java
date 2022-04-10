@@ -22,16 +22,16 @@ public class Classroom extends BaseEntity {
     private String name;
 
     @NotNull(message = "empty owner")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<User> students;
 
-    @ManyToMany(mappedBy = "classrooms", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "classrooms", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Exercise> exercises;
 
-    @OneToMany(mappedBy = "classroom",fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "classroom",fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Pair> pairs;
 }

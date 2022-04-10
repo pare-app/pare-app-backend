@@ -33,6 +33,6 @@ public class Session extends BaseEntity{
     @JoinColumn(name = "pair_id")
     private Pair pair;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Answer> answers;
 }

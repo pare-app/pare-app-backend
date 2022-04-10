@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Question extends BaseEntity {
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ExerciseQuestion> exercises;
 
     @NotNull(message = "empty image")
