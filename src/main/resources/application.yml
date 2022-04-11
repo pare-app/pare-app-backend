@@ -1,6 +1,6 @@
 app:
   security:
-    publicUrls: /user/register,/user/login,/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html
+    publicUrls: /user/register,/user/login,/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html,/memory-status
     issuer: pare-app
     secretKey: ${SECRET_KEY}
     tokenExpirationMinutes: 10
