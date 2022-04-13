@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -91,8 +92,8 @@ public class InverseConverters {
                     .given(Objects::nonNull, exercises -> exercises.stream()
                             .map(exercise -> exerciseQuestionService.find(exercise.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Question::setExercises)
                 .build();
     }
@@ -134,8 +135,8 @@ public class InverseConverters {
                             classrooms.stream()
                                     .map(classroom -> classroomService.find(classroom.getId())
                                             .orElseThrow(EntityNotFoundException::new))
-                                    .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                                    .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                 .into(User::setClassrooms)
                 .build();
     }
@@ -155,22 +156,22 @@ public class InverseConverters {
                     .given(Objects::nonNull, students -> students.stream()
                             .map(student -> userService.find(student.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Classroom::setStudents)
                 .from(ClassroomEntityDto::getExercises)
                     .given(Objects::nonNull, exercises -> exercises.stream()
                             .map(exercise -> exerciseService.find(exercise.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Classroom::setExercises)
                 .from(ClassroomEntityDto::getPairs)
                     .given(Objects::nonNull, pairs -> pairs.stream()
                             .map(pair -> pairService.find(pair.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Classroom::setPairs)
                 .build();
     }
@@ -206,22 +207,22 @@ public class InverseConverters {
                     .given(Objects::nonNull, classrooms -> classrooms.stream()
                             .map(classroom -> classroomService.find(classroom.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Exercise::setClassrooms)
                 .from(ExerciseEntityDto::getQuestions)
                     .given(Objects::nonNull, questions -> questions.stream()
                             .map(question -> exerciseQuestionService.find(question.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Exercise::setQuestions)
                 .from(ExerciseEntityDto::getSessions)
                     .given(Objects::nonNull, sessions -> sessions.stream()
                             .map(session -> sessionService.find(session.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Exercise::setSessions)
                 .build();
     }
@@ -243,8 +244,8 @@ public class InverseConverters {
                     .given(Objects::nonNull, answers -> answers.stream()
                             .map(answer -> answerService.find(answer.getId())
                                     .orElseThrow(EntityNotFoundException::new))
-                            .collect(Collectors.toSet()))
-                    .orElse(Sets.newHashSet())
+                            .collect(Collectors.toCollection(TreeSet::new)))
+                    .orElse(Sets.newTreeSet())
                     .into(Session::setAnswers)
                 .build();
     }

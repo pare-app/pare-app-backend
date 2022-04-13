@@ -19,6 +19,7 @@ public class Exercise extends BaseEntity{
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Classroom> classrooms;
 
+    @OrderBy("order ASC")
     @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<ExerciseQuestion> questions;
 

@@ -18,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -59,8 +62,8 @@ public class StandardConverters {
         return Datus.forTypes(Question.class, QuestionEntityDto.class).mutable(QuestionEntityDto::new)
                 .process((question, questionEntityDto) ->  questionEntityDto = questionLoopConverter().convert(question))
                 .from(Question::getExercises)
-                    .given(Objects::nonNull, exercises -> Sets.newHashSet(exerciseQuestionLoopConverter().convert(exercises)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, exercises -> Sets.newTreeSet(exerciseQuestionLoopConverter().convert(exercises)))
+                    .orElse(Sets.newTreeSet())
                     .into(QuestionEntityDto::setExercises)
                 .from(Question::getSolution)
                     .given(Objects::nonNull, solution -> solutionLoopConverter().convert(solution))
@@ -105,16 +108,16 @@ public class StandardConverters {
         return Datus.forTypes(Exercise.class, ExerciseEntityDto.class).mutable(ExerciseEntityDto::new)
                 .process((exercise, exerciseEntityDto) ->  exerciseEntityDto = exerciseLoopConverter().convert(exercise))
                 .from(Exercise::getClassrooms)
-                    .given(Objects::nonNull, classrooms -> Sets.newHashSet(classroomLoopConverter().convert(classrooms)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, classrooms -> Sets.newTreeSet(classroomLoopConverter().convert(classrooms)))
+                    .orElse(Sets.newTreeSet())
                     .into(ExerciseEntityDto::setClassrooms)
                 .from(Exercise::getQuestions)
-                    .given(Objects::nonNull, questions -> Sets.newHashSet(exerciseQuestionLoopConverter().convert(questions)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, questions -> Sets.newTreeSet(exerciseQuestionLoopConverter().convert(questions)))
+                    .orElse(Sets.newTreeSet())
                     .into(ExerciseEntityDto::setQuestions)
                 .from(Exercise::getSessions)
-                    .given(Objects::nonNull, sessions -> Sets.newHashSet(sessionLoopConverter().convert(sessions)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, sessions -> Sets.newTreeSet(sessionLoopConverter().convert(sessions)))
+                    .orElse(Sets.newTreeSet())
                     .into(ExerciseEntityDto::setSessions)
                 .build();
     }
@@ -138,8 +141,8 @@ public class StandardConverters {
                     .map(pair -> pairLoopConverter().convert(pair))
                     .into(SessionEntityDto::setPair)
                 .from(Session::getAnswers)
-                    .given(Objects::nonNull, answers -> Sets.newHashSet(answerLoopConverter().convert(answers)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, answers -> Sets.newTreeSet(answerLoopConverter().convert(answers)))
+                    .orElse(Sets.newTreeSet())
                     .into(SessionEntityDto::setAnswers)
                 .build();
     }
@@ -209,17 +212,16 @@ public class StandardConverters {
                     .map(owner -> userLoopConverter().convert(owner))
                     .into(ClassroomEntityDto::setOwner)
                 .from(Classroom::getStudents)
-                    .given(Objects::nonNull, students -> Sets.newHashSet(userLoopConverter().convert(students)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, students -> Sets.newTreeSet(userLoopConverter().convert(students)))
+                    .orElse(Sets.newTreeSet())
                     .into(ClassroomEntityDto::setStudents)
                 .from(Classroom::getExercises)
-                    .given(Objects::nonNull, exercises -> Sets.newHashSet(exerciseLoopConverter().convert(exercises)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, exercises -> Sets.newTreeSet(exerciseLoopConverter().convert(exercises)))
+                    .orElse(Sets.newTreeSet())
                     .into(ClassroomEntityDto::setExercises)
                 .from(Classroom::getPairs)
-                    .given(Objects::nonNull, pairs -> Sets.newHashSet(pairStandardConverter()
-                            .convert(pairs)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, pairs -> Sets.newTreeSet(pairStandardConverter().convert(pairs)))
+                    .orElse(Sets.newTreeSet())
                     .into(ClassroomEntityDto::setPairs)
                 .build();
     }
@@ -240,8 +242,8 @@ public class StandardConverters {
         return Datus.forTypes(User.class, UserEntityDto.class).mutable(UserEntityDto::new)
                 .process((user, userEntityDto) ->  userEntityDto = userLoopConverter().convert(user))
                 .from(User::getClassrooms)
-                    .given(Objects::nonNull, classrooms -> Sets.newHashSet(classroomLoopConverter().convert(classrooms)))
-                    .orElse(Sets.newHashSet())
+                    .given(Objects::nonNull, classrooms -> Sets.newTreeSet(classroomLoopConverter().convert(classrooms)))
+                    .orElse(Sets.newTreeSet())
                     .into(UserEntityDto::setClassrooms)
                 .build();
     }

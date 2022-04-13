@@ -29,6 +29,7 @@ public class Classroom extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<User> students;
 
+    @OrderBy("id ASC")
     @ManyToMany(mappedBy = "classrooms", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Exercise> exercises;
 

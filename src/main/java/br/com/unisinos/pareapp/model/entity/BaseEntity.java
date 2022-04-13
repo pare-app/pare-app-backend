@@ -13,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @MappedSuperclass
 @SuperBuilder
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable, Comparable<BaseEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -30,5 +30,14 @@ public abstract class BaseEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(BaseEntity o) {
+        if (this.id > o.id)
+            return 1;
+        if (this.id.equals(o.id))
+            return 0;
+        return -1;
     }
 }
