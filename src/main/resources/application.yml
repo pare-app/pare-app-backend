@@ -2,11 +2,12 @@ app:
   security:
     publicUrls: /user/register,/user/login,/v3/api-docs/**,/swagger-ui/**,/swagger-ui.html,/memory-status
     issuer: pare-app
-    secretKey: ${SECRET_KEY}
+    secretKey: testeste
     tokenExpirationMinutes: 10
 
 # jpa properties
 spring:
+
   jpa:
 #    open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -20,9 +21,9 @@ spring:
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    url: ${DATABASE_URL}
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://google/pareapp?cloudSqlInstance=maximal-yew-347818:southamerica-east1:pareapp-prd&socketFactory=com.google.cloud.sql.postgres.SocketFactory&user=postgres&password=postgres
 
 #logging:
 #  level:
