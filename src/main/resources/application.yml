@@ -20,9 +20,9 @@ spring:
       current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    url: ${DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${JDBC_DATABASE_URL}
 
 #logging:
 #  level:
